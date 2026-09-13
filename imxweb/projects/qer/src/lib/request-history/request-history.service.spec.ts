@@ -23,13 +23,13 @@ describe('RequestHistoryService', () => {
     };
   }
 
-  it('requests lightweight data for the request history list', async () => {
+  it('requests request history data with the supplied parameters', async () => {
     const { service, portalItshopRequests } = createService();
 
     await service.getRequests('uid-user', { PageSize: 1000, StartIndex: 0, person: '7' });
 
     expect(portalItshopRequests.Get).toHaveBeenCalledWith(
-      { PageSize: 1000, StartIndex: 0, person: '7', Lightweight: true },
+      { PageSize: 1000, StartIndex: 0, person: '7' },
       { signal: service.abortController.signal }
     );
   });
@@ -40,7 +40,7 @@ describe('RequestHistoryService', () => {
     await service.getRequest('uid-user', 'uid-pwo', service.abortController.signal);
 
     expect(portalItshopRequests.Get).toHaveBeenCalledWith(
-      { uidpwo: 'uid-pwo', PageSize: 1, StartIndex: 0, Lightweight: false },
+      { uidpwo: 'uid-pwo', PageSize: 1, StartIndex: 0 },
       { signal: service.abortController.signal }
     );
   });
@@ -52,7 +52,7 @@ describe('RequestHistoryService', () => {
     await service.getRequest('uid-user', 'uid-pwo', abortController.signal);
 
     expect(portalItshopRequests.Get).toHaveBeenCalledWith(
-      { uidpwo: 'uid-pwo', PageSize: 1, StartIndex: 0, Lightweight: false },
+      { uidpwo: 'uid-pwo', PageSize: 1, StartIndex: 0 },
       { signal: abortController.signal }
     );
   });

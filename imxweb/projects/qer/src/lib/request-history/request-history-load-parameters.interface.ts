@@ -34,7 +34,6 @@ export interface RequestHistoryLoadParameters extends CollectionLoadParameters {
   ShowMyPending?: string;
   ShowEndingSoon?: string;
   person?: string;
-  Lightweight?: boolean;
 }
 
 export interface ArchivedRequestHistoryLoadParameters {
