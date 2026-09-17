@@ -44,17 +44,14 @@ export class WorkflowDataWrapper {
   }
 
   public userAskedLastQuestion(userUid: string, decisionLevel: number): boolean {
-    const questionHistory = this.data.WorkflowHistory?.Entities?.filter(
-      (entityData) => entityData.Columns?.DecisionLevel.Value === decisionLevel && entityData.Columns?.DecisionType.Value === 'Query',
-    ).sort((item1, item2) => this.ascendingDate(item1.Columns?.XDateInserted?.Value, item2.Columns?.XDateInserted?.Value));
-    return !!questionHistory?.length && questionHistory[0].Columns?.UID_PersonHead.Value === userUid;
-  }
-
-  public hasOpenQuestions(decisionLevel: number): boolean {
-    const items = this.data.WorkflowData?.Entities?.filter(
-      (entityData) => entityData.Columns?.LevelNumber.Value === decisionLevel && entityData.Columns?.Decision.Value === 'Q',
+    const questionHistory = this.data.WorkflowHistory.Entities.filter(
+      (entityData) => entityData.Columns.DecisionLevel.Value === decisionLevel
+    ).sort((item1, item2) => this.ascendingDate(item1.Columns.XDateInserted?.Value, item2.Columns.XDateInserted?.Value));
+    return (
+      questionHistory.length > 0 &&
+      questionHistory[0].Columns.DecisionType.Value === 'Query' &&
+      questionHistory[0].Columns.UID_PersonHead.Value === userUid
     );
-    return (items?.length ?? 0) > 0;
   }
 
   public canDenyDecision(userUid: string, decisionLevel: number): boolean {

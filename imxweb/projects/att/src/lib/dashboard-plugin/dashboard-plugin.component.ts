@@ -27,7 +27,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { PendingItemsType, UserModelService } from 'qer';
+import { DashboardService, PendingItemsType, UserModelService } from 'qer';
 import { AttestationFeatureGuardService } from '../attestation-feature-guard.service';
 
 @Component({
@@ -40,16 +40,24 @@ export class DashboardPluginComponent implements OnInit {
 
   constructor(
     public readonly router: Router,
+    private readonly dashboardSvc: DashboardService,
     private readonly userModelSvc: UserModelService,
     private readonly attFeatureGuard: AttestationFeatureGuardService
   ) { }
 
   public async ngOnInit(): Promise<void> {
-    this.pendingItems = await this.userModelSvc.getPendingItems();
-    this.attEnabled = (await this.attFeatureGuard.getAttestationConfig()).IsAttestationEnabled;
+
+    const busy = this.dashboardSvc.beginBusy();
+
+    try {
+      this.pendingItems = await this.userModelSvc.getPendingItems();
+      this.attEnabled = (await this.attFeatureGuard.getAttestationConfig()).IsAttestationEnabled;
+    } finally {
+      busy.endBusy();
+    }
   }
 
   public goToAttestationInquiries(): void {
-    this.router.navigate(['attestation', 'decision'], { queryParams: { inquiries: true } });
+    this.router.navigate(['attestation', 'decision'], {queryParams: {inquiries:true}});
   }
 }

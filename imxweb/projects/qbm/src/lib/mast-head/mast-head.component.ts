@@ -108,13 +108,12 @@ import { IExtension } from '../ext/extension';
 })
 export class MastHeadComponent implements OnDestroy {
 
-  @Input() public externalLinkUrl = 'https://www.google.com';
-  @Input() public externalLinkLabel = 'Google';
-
   /**
    * When these {@link EuiTopNavigationItem|items} are set, the menu is displayed.
    */
   @Input() public menuItems: EuiTopNavigationItem[];
+  @Input() public externalLinkUrl = 'https://www.google.com';
+  @Input() public externalLinkLabel = 'Google';
 
   public get hasDocumentationConfig(): boolean {
     return !!this.appConfig.Config.LocalDocPath;

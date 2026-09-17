@@ -30,18 +30,18 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 import { PwoExtendedData, ViewConfigData } from 'imx-api-qer';
-import { DataModel, EntitySchema, ExtendedTypedEntityCollection, TypedEntity, ValType } from 'imx-qbm-dbts';
+import { ValType, ExtendedTypedEntityCollection, TypedEntity, EntitySchema, DataModel, EntityData } from 'imx-qbm-dbts';
 import {
-  AuthenticationService,
-  BusyService,
-  ClassloggerService,
-  ClientPropertyForTableColumns,
-  ConfirmationService,
   DataSourceToolbarSettings,
-  DataSourceToolbarViewConfig,
+  ClassloggerService,
+  AuthenticationService,
   DataTableComponent,
   SettingsService,
   SnackBarService,
+  ClientPropertyForTableColumns,
+  BusyService,
+  DataSourceToolbarViewConfig,
+  ConfirmationService,
 } from 'qbm';
 import { ApprovalsSidesheetComponent } from '../approvals-sidesheet/approvals-sidesheet.component';
 import { Approval } from '../approval';
@@ -124,7 +124,7 @@ export class InquiriesComponent implements OnInit, OnDestroy {
           }
           this.getData();
           this.table.clearSelection();
-        }),
+        })
       );
     this.approvalsService.isChiefApproval = false;
     this.subscriptions.push(authentication.onSessionResponse.subscribe((session) => (this.userUid = session.UserUid)));
@@ -139,6 +139,7 @@ export class InquiriesComponent implements OnInit, OnDestroy {
       this.viewConfig = await this.viewConfigService.getInitialDSTExtension(this.dataModel, this.viewConfigPath);
 
       await this.getData(undefined, true);
+
     } finally {
       isBusy.endBusy();
     }
@@ -163,6 +164,7 @@ export class InquiriesComponent implements OnInit, OnDestroy {
     try {
       this.approvalsCollection = isInitialLoad ? { totalCount: 0, Data: [] } : await this.getDataFromService();
       this.hasData = this.approvalsCollection?.totalCount > 0 || (this.navigationState.search ?? '') !== '';
+     
 
       this.updateTable();
     } finally {
@@ -176,8 +178,8 @@ export class InquiriesComponent implements OnInit, OnDestroy {
    */
   private async getDataFromService(): Promise<ExtendedTypedEntityCollection<Approval, PwoExtendedData>> {
     const result = await this.approvalsService.get(this.navigationState);
-    if (this.uidHelperPwo && result.totalCount === 0 && !this.isInitialLoadedWithServer) {
-      this.confirmation.confirm({ Message: '#LDS#The request could not be found. You may not have permission to view this request.' });
+    if(this.uidHelperPwo && result.totalCount === 0 && !this.isInitialLoadedWithServer){
+      this.confirmation.confirm({Message: '#LDS#The request could not be found. You may not have permission to view this request.'});
     }
     // checks, if the data is loaded from the server for the first time
     this.isInitialLoadedWithServer = true;
@@ -224,6 +226,16 @@ export class InquiriesComponent implements OnInit, OnDestroy {
     }
   }
 
+  public getInquiryText(pwo: Approval): string {
+    return this.getPwoData(pwo).Columns.ReasonHead.Value;
+  }
+  public getInquirer(pwo: Approval): string {
+    return this.getPwoData(pwo).Columns.DisplayPersonHead.Value;
+  }
+  public getQueryDate(pwo: Approval): Date {
+    return new Date(this.getPwoData(pwo).Columns.DateHead.Value);
+  }
+
   public onSearch(keywords: string): Promise<void> {
     const navigationState = {
       ...this.navigationState,
@@ -236,14 +248,23 @@ export class InquiriesComponent implements OnInit, OnDestroy {
     return this.getData(navigationState);
   }
 
-  public getInquiryText(pwo: Approval): string {
-    return this.actionService.getPwoData(pwo, this.userUid)?.Columns?.ReasonHead.Value || '';
+  private getPwoData(pwo: Approval): EntityData {
+    const questionHistory = pwo.pwoData.WorkflowHistory.Entities.filter(
+      (entityData) => entityData.Columns.DecisionLevel.Value === pwo.DecisionLevel.value
+    ).sort((item1, item2) => this.ascendingDate(item1.Columns.XDateInserted?.Value, item2.Columns.XDateInserted?.Value));
+    return questionHistory[0];
   }
-  public getInquirer(pwo: Approval): string {
-    return this.actionService.getPwoData(pwo, this.userUid)?.Columns?.DisplayPersonHead.Value || '';
-  }
-  public getQueryDate(pwo: Approval): string {
-    return this.actionService.getPwoData(pwo, this.userUid)?.Columns?.DateHead.Value ?? '';
+
+  private ascendingDate(value1: Date, value2: Date): number {
+    if (value1 < value2) {
+      return 1;
+    }
+
+    if (value1 > value2) {
+      return -1;
+    }
+
+    return 0;
   }
 
   private updateTable(): void {

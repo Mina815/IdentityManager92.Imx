@@ -53,7 +53,6 @@ import { MitigatingControlsComponent } from './mitigating-controls/mitigating-co
 import { AttestationInquiriesComponent } from './attestation-inquiries/attestation-inquiries.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
-import { AttestationCaseHistoryComponent } from './attestation-case-history/attestation-case-history.component';
 @NgModule({
   declarations: [
     AttestationCaseComponent,
@@ -67,8 +66,7 @@ import { AttestationCaseHistoryComponent } from './attestation-case-history/atte
     DecisionComplianceViolationComponent,
     DecisionPolicyViolationComponent,
     MitigatingControlsComponent,
-    AttestationInquiriesComponent,
-    AttestationCaseHistoryComponent
+    AttestationInquiriesComponent
   ],
   imports: [
     AttestationSnapshotModule,

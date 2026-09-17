@@ -28,6 +28,7 @@ import { Component, OnInit } from '@angular/core';
 import { TeamResponsibilitiesService } from '../team-responsibilities.service';
 import { Router } from '@angular/router';
 import { QerPermissionsService } from '../../admin/qer-permissions.service';
+import { DashboardService } from '../../wport/start/dashboard.service';
 
 @Component({
   selector: 'imx-team-responsibility-tile',
@@ -35,17 +36,22 @@ import { QerPermissionsService } from '../../admin/qer-permissions.service';
 })
 export class TeamResponsibilityTileComponent implements OnInit {
   public inactiveResponsibilitiesCount: number;
-
   constructor(
     private readonly teamResponsibilitiesService: TeamResponsibilitiesService,
     public readonly router: Router,
-    private readonly qerPermissionsService: QerPermissionsService
-  ) { }
+    private readonly qerPermissionsService: QerPermissionsService,
+    private readonly dashboardService: DashboardService
+  ) {}
 
   async ngOnInit(): Promise<void> {
-    const permission = await this.qerPermissionsService.isPersonManager();
-    if (permission) {
-      this.inactiveResponsibilitiesCount = await this.teamResponsibilitiesService.countInactiveIdentity();
+    const busy = this.dashboardService.beginBusy();
+    try{
+      const permission = await this.qerPermissionsService.isPersonManager();
+      if(permission){
+        this.inactiveResponsibilitiesCount = await this.teamResponsibilitiesService.countInactiveIdentity();
+      }
+    }finally{
+      busy.endBusy();
     }
   }
 }

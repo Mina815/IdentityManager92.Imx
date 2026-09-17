@@ -26,15 +26,16 @@
 
 import { Component, Input } from '@angular/core';
 
-import { IClientProperty, IEntityColumn, TypedEntity, ValType } from 'imx-qbm-dbts';
+import { IClientProperty, TypedEntity, ValType } from 'imx-qbm-dbts';
 import { buildAdditionalElementsString } from '../data-table-additional-info.model';
 
 @Component({
   selector: 'imx-data-table-display-cell',
   templateUrl: './data-table-display-cell.component.html',
-  styleUrls: ['./data-table-display-cell.component.scss'],
+  styleUrls: ['./data-table-display-cell.component.scss']
 })
 export class DataTableDisplayCellComponent {
+
   public readonly ValType = ValType;
 
   @Input() public entity: TypedEntity;
@@ -43,13 +44,5 @@ export class DataTableDisplayCellComponent {
 
   public getSubtitleText(): string {
     return buildAdditionalElementsString(this.entity?.GetEntity(), this.propertiesforSubtitle);
-  }
-
-  public get column(): IEntityColumn | undefined {
-    try {
-      return this.entity?.GetEntity()?.GetColumn(this.property?.ColumnName ?? '');
-    } catch {
-      return undefined;
-    }
   }
 }

@@ -26,9 +26,8 @@
 
 import { Injectable } from '@angular/core';
 
+import { ClassloggerService, SettingsService } from 'qbm';
 import { ProjectConfig, QerProjectConfig } from 'imx-api-qer';
-import { CachedPromise } from 'imx-qbm-dbts';
-import { CacheService, ClassloggerService, SettingsService } from 'qbm';
 import { QerApiService } from '../qer-api-client.service';
 
 /**
@@ -39,31 +38,27 @@ import { QerApiService } from '../qer-api-client.service';
   providedIn: 'root'
 })
 export class ProjectConfigurationService {
-  private readonly projectConfigCache: CachedPromise<QerProjectConfig & ProjectConfig>;
+  private projectConfig: QerProjectConfig & ProjectConfig;
 
   constructor(private qerClient: QerApiService,
     private readonly settings: SettingsService,
-    private readonly logger: ClassloggerService,
-    cacheService: CacheService) {
-    this.projectConfigCache = cacheService.buildCache(() => this.fetchConfig());
-  }
+    private readonly logger: ClassloggerService) { }
 
   public async getConfig(): Promise<QerProjectConfig & ProjectConfig> {
-    const projectConfig = await this.projectConfigCache.get();
-    this.settings.DefaultPageSize = projectConfig.DefaultPageSize;
-    return projectConfig;
-  }
+    if (this.projectConfig == null) {
+      this.logger.info(this, 'Project configuration is undefined. Retrieving...');
+      this.projectConfig = {
+        ...await this.qerClient.client.portal_qer_projectconfig_get(),
+        ...await this.qerClient.client.portal_config_get()
+      };
 
-  private async fetchConfig(): Promise<QerProjectConfig & ProjectConfig> {
-    this.logger.info(this, 'Fetching project configuration...');
-    const [qerProjectConfig, projectConfig] = await Promise.all([
-      this.qerClient.client.portal_qer_projectconfig_get(),
-      this.qerClient.client.portal_config_get()
-    ]);
-    const merged = { ...qerProjectConfig, ...projectConfig };
-    this.logger.info(this, 'Received project configuration.');
-    this.logger.trace(this, '', merged);
-    return merged;
+      this.logger.info(this, 'Received project configuration.');
+      this.logger.trace(this, '', this.projectConfig);
+    }
+
+    this.settings.DefaultPageSize = this.projectConfig.DefaultPageSize;
+
+    return this.projectConfig;
   }
 
 }

@@ -54,7 +54,6 @@ export class ApprovalsSidesheetComponent implements OnDestroy, OnInit {
       pwo: Approval;
       itShopConfig: ITShopConfig;
       fromInquiry: boolean;
-      isUserEscalationApprover: boolean;
     },
     public readonly actionService: WorkflowActionService,
     private readonly sideSheetRef: EuiSidesheetRef,
@@ -78,17 +77,6 @@ export class ApprovalsSidesheetComponent implements OnDestroy, OnInit {
 
   public ngOnDestroy(): void {
     this.subscriptions.forEach((s) => s.unsubscribe());
-  }
-
-  public canResetReservation() {
-    if (this.canWithdrawInquiry()) return false;
-    return (
-      this.data.pwo.IsReserved.value && ((this.data.pwo.hasAskedLastQuestion && !this.data.pwo.hasOpenQuestions) || this.isChiefApprover)
-    );
-  }
-
-  public canWithdrawInquiry(): boolean {
-    return this.data.pwo.IsReserved.value && this.data.pwo.hasAskedLastQuestion && this.data.pwo.hasOpenQuestions;
   }
 
   public async acceptTermsOfUse(): Promise<void> {

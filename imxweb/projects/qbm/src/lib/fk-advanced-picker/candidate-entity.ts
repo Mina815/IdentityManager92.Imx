@@ -24,18 +24,19 @@
  *
  */
 
-import { DisplayColumns, EntitySchema, TypedEntity, ValType } from 'imx-qbm-dbts';
+import { TypedEntity, EntitySchema, DisplayColumns, ValType } from 'imx-qbm-dbts';
 
 export class CandidateEntity extends TypedEntity {
-  public static GetEntitySchema(tablename?: string): EntitySchema {
-    const columns = {
-      XObjectKey: {
-        Type: ValType.String,
-        ColumnName: 'XObjectKey',
-      },
-    };
+    public static GetEntitySchema(): EntitySchema {
+        const columns = {
+            XObjectKey: {
+                Type: ValType.String,
+                ColumnName: 'XObjectKey'
+            }
+        };
 
-    columns[DisplayColumns.DISPLAY_PROPERTYNAME] = DisplayColumns.DISPLAY_PROPERTY;
-    return { Columns: columns, TypeName: tablename };
-  }
+        columns[DisplayColumns.DISPLAY_PROPERTYNAME] = DisplayColumns.DISPLAY_PROPERTY;
+
+        return { Columns: columns };
+    }
 }

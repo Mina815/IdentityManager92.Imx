@@ -14,9 +14,7 @@
     <imx-entity-column-editor
       *ngFor="let column of columns; let i = index"
       [column]="column"
-      [isMandatory]="isMandatory(column)"
-      (controlCreated)="addControl($event.name + '_' + i, $event.control)"
-      (pendingChanged)="onPendingChanged($event)"
+      (controlCreated)="cartItemForm.addControl($event.name + '_' + i, $event.control)"
       [attr.data-imx-identifier]="'cartitem-edit-' + column.ColumnName + '_' + i"
     >
     </imx-entity-column-editor>
@@ -34,13 +32,12 @@
       </button>
     </mat-menu>
   </ng-container>
-
   <button
     data-imx-identifier="cartitem-edit-ok-dialog"
     mat-raised-button
     color="primary"
     (click)="sideSheetRef.close(true)"
-    [disabled]="cartItemForm.invalid || !cartItemForm.dirty || formGroupIsPending"
+    [disabled]="cartItemForm.invalid || !cartItemForm.dirty"
   >
     {{ '#LDS#Save' | translate }}
   </button>

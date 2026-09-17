@@ -28,18 +28,16 @@ import { Component, ElementRef, EventEmitter, OnDestroy, ViewChild } from '@angu
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
 
-import { ServerError } from '../../base/server-error';
-import { ClassloggerService } from '../../classlogger/classlogger.service';
-import { FileSelectorService } from '../../file-selector/file-selector.service';
-import { Base64ImageService } from '../../images/base64-image.service';
-import { CdrEditor, ValueHasChangedEventArg } from '../cdr-editor.interface';
 import { ColumnDependentReference } from '../column-dependent-reference.interface';
-import { EditorBase } from '../editor-base';
+import { CdrEditor, ValueHasChangedEventArg } from '../cdr-editor.interface';
 import { EntityColumnContainer } from '../entity-column-container';
+import { ClassloggerService } from '../../classlogger/classlogger.service';
+import { Base64ImageService } from '../../images/base64-image.service';
+import { FileSelectorService } from '../../file-selector/file-selector.service';
 
 /**
  * Provides a {@link CdrEditor | CDR editor} for editing / viewing image data columns.
- *
+ * 
  * To change its value, it uses an {@link ImageSelectComponent | image select component}.
  * When set to read-only, it uses an {@link ImageViewComponent | image view component} to display the content.
  */
@@ -47,7 +45,6 @@ import { EntityColumnContainer } from '../entity-column-container';
   selector: 'imx-edit-image',
   templateUrl: './edit-image.component.html',
   styleUrls: ['./edit-image.component.scss'],
-  providers: [FileSelectorService],
 })
 export class EditImageComponent implements CdrEditor, OnDestroy {
   /**
@@ -91,26 +88,15 @@ export class EditImageComponent implements CdrEditor, OnDestroy {
 
   private readonly subscriptions: Subscription[] = [];
   private isWriting = false;
-  /**
-   * @ignore
-   * Used for the template and displays the last server error, that occured while loading content.
-   */
-  public lastError: ServerError | undefined;
-  /**
-   * If an error occured, it returns its message
-   */
-  public get validationErrorMessage(): string {
-    return this.lastError?.toString() || '';
-  }
 
   constructor(
     private readonly logger: ClassloggerService,
     private readonly imageProvider: Base64ImageService,
-    private readonly fileSelector: FileSelectorService,
+    private readonly fileSelector: FileSelectorService
   ) {
     this.subscriptions.push(
       this.fileSelector.fileFormatError.subscribe(() => (this.fileFormatError = true)),
-      this.fileSelector.fileSelected.subscribe((filepath) => this.writeValue(this.imageProvider.getImageData(filepath))),
+      this.fileSelector.fileSelected.subscribe((filepath) => this.writeValue(this.imageProvider.getImageData(filepath)))
     );
   }
 
@@ -138,7 +124,7 @@ export class EditImageComponent implements CdrEditor, OnDestroy {
         this.subscriptions.push(
           cdref.minlengthSubject.subscribe(() => {
             this.setValidators();
-          }),
+          })
         );
       }
       this.subscriptions.push(
@@ -151,7 +137,7 @@ export class EditImageComponent implements CdrEditor, OnDestroy {
             this.control.setValue(this.columnContainer.value, { emitEvent: false });
           }
           this.valueHasChanged.emit({ value: this.control.value });
-        }),
+        })
       );
 
       this.subscriptions.push(
@@ -168,9 +154,8 @@ export class EditImageComponent implements CdrEditor, OnDestroy {
             } finally {
             }
           });
-        }),
+        })
       );
-      this.control.addValidators(EditorBase.hasServerError(this));
     }
   }
 
@@ -219,10 +204,6 @@ export class EditImageComponent implements CdrEditor, OnDestroy {
    */
   private async writeValue(value: string): Promise<void> {
     this.logger.debug(this, 'writeValue called with value', value);
-    if (this.control.errors && Object.keys(this.control.errors).some((elem) => elem !== 'generalError' && elem !== 'required')) {
-      this.logger.debug(this, 'writeValue - client validation failed');
-      return;
-    }
 
     if (!this.columnContainer.canEdit || this.columnContainer.value === value) {
       return;
@@ -235,19 +216,16 @@ export class EditImageComponent implements CdrEditor, OnDestroy {
       this.isWriting = true;
       this.logger.debug(this, 'writeValue - updateCdrValue...');
       await this.columnContainer.updateValue(value);
-      this.lastError = undefined;
     } catch (e) {
       this.logger.error(this, e);
-      this.lastError = e;
     } finally {
       this.isLoading = false;
       this.isWriting = false;
 
-      if (!this.lastError && this.control.value !== this.columnContainer.value) {
+      if (this.control.value !== this.columnContainer.value) {
         this.control.setValue(this.columnContainer.value, { emitEvent: false });
         this.logger.debug(this, 'form control value is set to', this.control.value);
       }
-      this.control.updateValueAndValidity();
       this.valueHasChanged.emit({ value: this.control.value, forceEmit: true });
     }
 

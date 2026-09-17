@@ -107,7 +107,6 @@ export class DataSourcePaginatorComponent implements OnChanges, OnDestroy {
       }));
 
       if(this.dst.busyService){
-        this.isLoading = this.dst.busyService.isBusy;
         this.dst.busyService.busyStateChanged.subscribe((value:boolean) =>{
           this.isLoading = value;
           this.changeDetector.detectChanges();

@@ -152,9 +152,6 @@ export class RequestTableComponent implements OnInit, OnDestroy {
   private displayedColumns: IClientProperty[];
   private readonly subscriptions: Subscription[] = [];
   private readonly filterPresets = { ShowEndingSoon: undefined, ShowMyPending: undefined };
-  private selectionChangeToken = 0;
-  private selectionHydrationAbortController = new AbortController();
-  private readonly selectionHydrationCache = new Map<string, ItshopRequest>();
   public readonly busyService = new BusyService();
   @ViewChild(DataTableComponent) private readonly table: DataTableComponent<TypedEntity>;
   @ViewChild(DataSourceToolbarComponent) private readonly dataToolbar: DataSourceToolbarComponent;
@@ -211,18 +208,6 @@ export class RequestTableComponent implements OnInit, OnDestroy {
       this.filterOptions = await this.requestHistoryService.getFilterOptions(this.userUid, this.filterPresets, this.dataModel);
       this.itShopConfig = (await this.projectConfig.getConfig()).ITShopConfig;
 
-      // After getConfig() resolves, settingsService.DefaultPageSize reflects the project's
-      // configured default (project-configuration.service.ts assigns it). The constructor,
-      // however, captured the pre-config default into navigationState.PageSize, so the first
-      // data load could otherwise be issued with the stale platform default (20). Refresh
-      // the page size here, preserving filter properties already added to navigationState
-      // (uidpwo, ShowEndingSoon, ShowMyPending, UID_Person, etc.).
-      // Issue: SR 03043707 (Request History timeout on first load when project default > 20)
-      this.navigationState = {
-        ...this.navigationState,
-        PageSize: this.settingsService.DefaultPageSize,
-      };
-
       await this.getData(null, true);
     } finally {
       busy.endBusy();
@@ -230,7 +215,6 @@ export class RequestTableComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    this.selectionHydrationAbortController.abort();
     this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
@@ -257,50 +241,8 @@ export class RequestTableComponent implements OnInit, OnDestroy {
     this.navigationState.ShowMyPending = this.filterPresets.ShowMyPending;
   }
 
-  public async onSelectionChanged(items: ItshopRequest[]): Promise<void> {
-    const selectionChangeToken = ++this.selectionChangeToken;
-    this.selectionHydrationAbortController.abort();
-    this.selectionHydrationAbortController = new AbortController();
-    const selectedItems = items || [];
-    this.selectedItems = selectedItems;
-
-    if (!selectedItems.length) {
-      return;
-    }
-
-    const hydratedItems: ItshopRequest[] = [];
-    // Hydrate sequentially to avoid a burst of detail requests against the API server when many rows are selected.
-    for (const item of selectedItems) {
-      hydratedItems.push(await this.getHydratedSelectionItem(item, this.selectionHydrationAbortController.signal));
-
-      if (selectionChangeToken !== this.selectionChangeToken) {
-        return;
-      }
-    }
-
-    if (selectionChangeToken === this.selectionChangeToken) {
-      this.selectedItems = hydratedItems;
-    }
-  }
-
-  private async getHydratedSelectionItem(item: ItshopRequest, signal: AbortSignal): Promise<ItshopRequest> {
-    const uidPwo = item.GetEntity().GetKeys()[0];
-    if (!uidPwo) {
-      return item;
-    }
-
-    const cachedItem = this.selectionHydrationCache.get(uidPwo);
-    if (cachedItem) {
-      return cachedItem;
-    }
-
-    try {
-      const hydratedItem = (await this.requestHistoryService.getRequest(this.userUid, uidPwo, signal)) || item;
-      this.selectionHydrationCache.set(uidPwo, hydratedItem);
-      return hydratedItem;
-    } catch {
-      return item;
-    }
+  public onSelectionChanged(items: ItshopRequest[]): void {
+    this.selectedItems = items;
   }
 
   public async updateConfig(config: ViewConfigData): Promise<void> {
@@ -336,7 +278,6 @@ export class RequestTableComponent implements OnInit, OnDestroy {
 
   public async getData(newState?: RequestHistoryLoadParameters, isInit = false): Promise<void> {
     const busy = this.busyService.beginBusy();
-    this.selectionHydrationCache.clear();
 
     if (newState) {
       this.navigationState = newState;
@@ -405,18 +346,16 @@ export class RequestTableComponent implements OnInit, OnDestroy {
   }
 
   public async viewDetails(pwo: ItshopRequest): Promise<void> {
-    const hydratedPwo = await this.getHydratedSelectionItem(pwo, new AbortController().signal);
-
     await this.sideSheet
       .open(RequestDetailComponent, {
         title: await this.translator.get('#LDS#Heading View Request Details').toPromise(),
-        subTitle: hydratedPwo.GetEntity().GetDisplay(),
+        subTitle: pwo.GetEntity().GetDisplay(),
         padding: '0px',
         width: 'max(700px, 60%)',
         testId: 'request-table-view-request-details',
         data: {
           isReadOnly: this.isReadOnly,
-          personWantsOrg: hydratedPwo,
+          personWantsOrg: pwo,
           itShopConfig: this.itShopConfig,
           userUid: this.userUid,
         },

@@ -30,7 +30,8 @@
 
 export const environment = {
   production: false,
-  clientUrl: 'https://win-bkaap1tejp6.iamlab.local/ApiServer1/',
+  // clientUrl: 'http://localhost:8182',
+  clientUrl: 'https://win-bkaap1tejp6.iamlab.local/ApiServer1/', 
   appName: 'qer-app-portal',
   appVersion: '1.0.0'
 };

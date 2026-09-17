@@ -34,6 +34,26 @@ export class ImxTranslateLoader implements TranslateLoader {
   constructor(private session: imx_SessionService) {}
 
   public getTranslation(culture: string): Observable<any> {
+
+      // Check if the culture contains the word "Arabic" (case-insensitive)
+    if (culture.toLowerCase().includes('ar')) {
+      console.log("culture",culture)
+      // Set the 'dir' attribute on the body element to 'rtl' for RTL text direction
+      document.documentElement.setAttribute('dir', 'rtl');
+      document.documentElement.style.setProperty('--direction','rtl');
+    document.documentElement.style.setProperty('--alignself','flex-end');
+    document.documentElement.style.setProperty('--alignselfmatcardsubtitle','flex-start');
+    document.documentElement.style.setProperty('--width','83%');
+    document.documentElement.style.setProperty('--widthmatdrawer','100%');
+    document.documentElement.style.setProperty('--textalignlast','right');
+    document.documentElement.style.setProperty('--backcolor','#60498C');
+    document.documentElement.style.setProperty('--margin','3px');
+    
+    
+    
+}
+document.documentElement.style.setProperty('--backcolor','#60498C');
+document.documentElement.style.setProperty('--sidesheetbackcolor','#80c2b7e4')
     return from(this.getCaptionsLds(culture));
   }
 

@@ -4,15 +4,15 @@
       <eui-logo [size]="72"></eui-logo>
     </div>
     <div *ngIf="logoUrl">
-      <img class="custom-logo" [src]="logoUrl" />
+      <!--<img class="custom-logo" [src]="logoUrl" />-->
     </div>
-    <h1 data-imx-identifier="product-name-title">
+   <!--- <h1 data-imx-identifier="product-name-title">
       {{ product.name }}
       <br />
       <ng-container *ngIf="!appConfigService.Config.DoNotShowAppNameWithProduct">
-        {{ title }}
+       {{ title }}
       </ng-container>
-    </h1>
+    </h1> -->
     <imx-usermessage class="usermessage" panelClass="imx-small-message"></imx-usermessage>
     <div *ngIf="sessionState?.isOAuth; else loginMask" class="imx-loginButtonpanel">
       <button data-imx-identifier="logout-oauth-button" mat-button type="button" class="imx-button" (click)="logoutOAuth()">{{ '#LDS#OAuth logout' | translate }}</button>

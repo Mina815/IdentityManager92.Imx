@@ -29,8 +29,6 @@ import { Injectable } from '@angular/core';
 import { ValueConstraint } from 'imx-qbm-dbts';
 import { NumberError } from './number-error.interface';
 
-export type NumericInput = number | null | undefined;
-
 /**
  * A service for providing a number validation.
  */
@@ -38,6 +36,8 @@ export type NumericInput = number | null | undefined;
   providedIn: 'root',
 })
 export class NumberValidatorService {
+  private readonly regexPatternInteger = /^[-+]?\d+$/;
+
   /**
    * Validates the value by checking two things:
    * <ol>
@@ -48,12 +48,12 @@ export class NumberValidatorService {
    * @param range The {@link ValueConstraint}, that determines the bounds.
    * @returns
    */
-  public validate(value: NumericInput, range: ValueConstraint | undefined): NumberError | null {
+  public validate(value: any, range: ValueConstraint): NumberError | null {
     if (value == null) {
       return null;
     }
 
-    if (!Number.isFinite(value) || !Number.isInteger(value)) {
+    if (!this.regexPatternInteger.test(value)) {
       return { invalidInteger: true };
     }
 

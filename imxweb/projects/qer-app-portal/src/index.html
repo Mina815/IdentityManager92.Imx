@@ -7,6 +7,234 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 </head>
+<style>
+body {
+  
+     font-family: 'Loew Next Arabic';
+    }
+.splash-screen-container{
+    /*background-color:#7A60A9 !important;*/
+    background-image: url("assets/IAM-SSOO.jpg") !important;
+   background-repeat: no-repeat !important;
+  background-size: cover !important;
+
+  }
+     h2 ,h3 {
+     color: #60498C !important;
+    }
+    .splash-screen-container{
+    background-color:#60498C !important;}
+    .eui-masthead,
+  .eui-masthead .mat-toolbar.mat-primary ,.mat-raised-button.mat-primary{
+    background-color: #60498C !important;
+  }
+  .eui-sidesheet .mat-toolbar{
+      background-color: #60498C !important;
+      justify-content: space-between !important;
+    }
+
+.eui-sidesheet .background--blue, .eui-sidesheet .background--iris-blue{
+    background-color: var(--sidesheetbackcolor);
+}
+  
+   @font-face {
+    font-family: 'Loew-Next-Arabic';
+    src: url('fonts/Loew-Next-Arabic-Light.otf');
+    font-weight: 300;
+    font-style: normal;
+    
+    
+    }
+    h1,h2,h3{
+     /* font-size: 18px !important;*/
+      text-align: var(--textalignlast) !important;
+    }
+    h4{
+      text-align: var(--textalignlast) !important;
+    }
+    /*imx-start{
+      background-image: url("assets/IAM-SSO.jpg") !important;
+    }*/
+   /* span{
+      font-size: 107% !important;
+    }
+     div{
+      font-size: 100% !important;
+     }*/
+     imx-col imx-col80{
+      text-align: var(--textalignlast)
+
+     }
+     imx-col imx-col20 imx-colright{
+      text-align: var(--textalignlast)
+
+     }
+   div,span,.pageContent h1.mat-headline,.pageContent h2.mat-headline, h1,h2,h3, body .mat-tab-link {
+      font-family: 'Loew-Next-Arabic';
+      
+
+    }
+
+    .imx-data-source-toolbar .eui-search-icon {
+      color: #60498C !important;
+    }
+    .mat-button.mat-primary{
+    color: var(--backcolor);
+   }
+    .mat-button.mat-primary{
+    color:  #60498C !important;
+    }
+     .imx-data-source-toolbar .eui-search-icon {
+      color: #60498C !important;
+     
+    }
+    .body .mat-button.mat-primary, body .mat-icon-button.mat-primary, body .mat-stroked-button.mat-primary {
+     
+       color: #60498C !important;
+    }
+   .mat-chip.mat-standard-chip.mat-chip-selected.mat-primary {
+      background-color: #60498C !important;    
+   }
+   
+  .mat-step-header .mat-step-icon-selected, body .mat-step-header .mat-step-icon-state-done, body .mat-step-header .mat-step-icon-state-edit {
+    background-color: #60498C !important;
+   }
+   body .mat-slide-toggle.mat-checked .mat-ripple-element{
+    background-color: #60498C !important;
+   }
+
+   body .mat-primary .mat-option.mat-selected:not(.mat-option-disabled){
+    color: #60498C !important;
+   }
+   body .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background{
+    background-color: #60498C !important;
+   }
+  
+   body .mat-tab-group.mat-primary .mat-ink-bar, body .mat-tab-nav-bar.mat-primary .mat-ink-bar{
+    background-color: #60498C !important;
+   }
+   body .mat-pseudo-checkbox-checked, body .mat-pseudo-checkbox-indeterminate, body .mat-accent .mat-pseudo-checkbox-checked, body .mat-accent .mat-pseudo-checkbox-indeterminate{
+    background: #60498C !important;
+   }
+   
+
+   /*.mat-flat-button{
+    color: #007764 !important;}*/
+   
+  .mat-expansion-indicator:after{
+    color: #60498C !important;
+   }
+   /* .imx-request-label-value[_ngcontent-swm-c563]{
+      color: #007764 !important;
+    }*/
+    .snavigation[_ngcontent-yhb-c393] .mat-sidenav-container[_ngcontent-yhb-c393] .mat-sidenav[_ngcontent-yhb-c393] .snavigation-side[_ngcontent-yhb-c393] .snavigation-side-content[_ngcontent-yhb-c393] .snavigation-item.snavigation-item--selected[_ngcontent-yhb-c393] {
+       background-color: #60498C !important;
+    }
+   .mat-radio-button.mat-accent .mat-radio-inner-circle, body .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), body .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple, body .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple{
+      color: #60498C !important;
+    }
+    .eui-top-navigation-desktop .eui-top-navigation .eui-top-navigation-item-active .mat-button, .eui-top-navigation-desktop .eui-top-navigation .mat-button.eui-top-navigation-item-active, .eui-top-navigation-desktop .eui-top-navigation .eui-top-navigation-item-active-link .mat-button, .eui-top-navigation-desktop .eui-top-navigation .mat-button.eui-top-navigation-item-active-link{
+      border-bottom: 2px solid #60498C !important;
+    }
+    .eui-badge[_nghost-gfp-c302] .eui-badge-color--primary[_ngcontent-gfp-c302] {
+       background-color: #8C8D8D !important;
+    }
+    body .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle{
+      border-color: #60498C !important;
+    }
+    body .mat-radio-button.mat-accent .mat-radio-inner-circle, body .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), body .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple, body .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple{
+      background-color: #60498C !important;
+    }
+    body .mat-input-element{
+      caret-color: #60498C !important;
+    }
+    body .mat-form-field-appearance-outline .mat-focused .mat-form-field-outline-thick{
+      color: #60498C !important;
+    }
+   .mat-chip .eui-icon{
+    padding: 0px 19px !important;
+    margin-left: -19px !important;
+   }
+.eui-alert.eui-alert-type--info.eui-alert-colored{
+  background-color:  #60498C !important;;
+}
+.eui-alert.eui-alert-type--info .eui-alert-icon{
+  color: #60498C !important;
+}
+.eui-top-navigation-mobile .eui-top-navigation-mobile-content .mat-button .eui-icon{
+  color: #60498C !important;
+}
+body .mat-checkbox-checked.mat-accent .mat-checkbox-background{
+  background-color: #60498C !important;
+}
+body .mat-flat-button.mat-primary.mat-button-disabled, body .mat-flat-button.mat-accent.mat-button-disabled, body .mat-flat-button.mat-warn.mat-button-disabled, body .mat-flat-button.mat-button-disabled.mat-button-disabled, body .mat-raised-button.mat-primary.mat-button-disabled, body .mat-raised-button.mat-accent.mat-button-disabled, body .mat-raised-button.mat-warn.mat-button-disabled, body .mat-raised-button.mat-button-disabled.mat-button-disabled, body .mat-fab.mat-primary.mat-button-disabled, body .mat-fab.mat-accent.mat-button-disabled, body .mat-fab.mat-warn.mat-button-disabled, body .mat-fab.mat-button-disabled.mat-button-disabled, body .mat-mini-fab.mat-primary.mat-button-disabled, body .mat-mini-fab.mat-accent.mat-button-disabled, body .mat-mini-fab.mat-warn.mat-button-disabled, body .mat-mini-fab.mat-button-disabled.mat-button-disabled{
+   background-color: #60498C !important;
+   color: #FFFF !important;
+}
+.eui-badge[_nghost-cng-c302] .eui-badge-color--primary[_ngcontent-cng-c302]{
+  background-color: #60498C !important;
+}
+.mat-form-field-appearance-outline .mat-form-field-outline{
+  top: 0.25em !important;
+}
+body .mat-form-field.mat-focused .mat-form-field-label{
+  color: #60498C !important;
+}
+body .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: #60498C !important;
+}
+/*.mat-form-field-appearance-outline .mat-form-field-wrapper{
+  margin: 1.25em 0 !important;
+}
+ .mat-form-field-flex{
+  margin-top: -1.25em !important;
+}*/
+
+body  .mat-button-base .mat-warn{
+  background-color: #60498C !important;
+}
+body .mat-slide-toggle.mat-checked .mat-slide-toggle-thumb{
+  background-color: #60498C !important;
+}
+body .mat-flat-button.mat-primary, body .mat-raised-button.mat-primary, body .mat-fab.mat-primary, body .mat-mini-fab.mat-primary{
+  background-color: #60498C !important;
+}
+body .mat-button.mat-primary .mat-button-focus-overlay, body .mat-icon-button.mat-primary .mat-button-focus-overlay, body .mat-stroked-button.mat-primary .mat-button-focus-overlay{
+  background-color: #60498C !important;
+}
+.eui-badge[_nghost-qpt-c302] .eui-badge-color--primary[_ngcontent-qpt-c302]{
+  background-color: #60498C !important;
+}
+body .mat-slide-toggle.mat-primary.mat-checked .mat-slide-toggle-bar{
+background-color: #60498C !important;
+}
+body .mat-slide-toggle.mat-primary.mat-checked .mat-slide-toggle-thumb{
+  background-color: #60498C !important;
+}
+body .mat-slide-toggle.mat-checked .mat-slide-toggle-bar{
+background-color: #60498C !important;
+}
+.eui-sidesheet .mat-toolbar .eui-sidesheet__icon{
+  display: none !important;
+}
+
+[_nghost-odh-c545] .imx-decision[_ngcontent-odh-c545] > button[_ngcontent-odh-c545]:not(:last-of-type){
+  background-color: #8C8D8D !important;
+}
+.snavigation[_ngcontent-lvj-c393] .mat-sidenav-container[_ngcontent-lvj-c393] .mat-sidenav[_ngcontent-lvj-c393] .snavigation-side[_ngcontent-lvj-c393] .snavigation-side-content[_ngcontent-lvj-c393] .snavigation-item.snavigation-item--selected[_ngcontent-lvj-c393]
+{
+  background-color: #60498C !important;
+}
+.data-explorer .data-explorer-card-header .data-explorer-card-header-bg {
+  background-color: #e2d6f9 !important;
+}
+.imx-card[_ngcontent-sfu-c558] .imx-content[_ngcontent-sfu-c558] span[_ngcontent-sfu-c558]{
+  color: #60498C !important;
+}
+.imx-request-label-value[_ngcontent-sfu-c563] {
+  color: #60498C !important;
+}
+</style>
 
 <body>
   <imx-root></imx-root>

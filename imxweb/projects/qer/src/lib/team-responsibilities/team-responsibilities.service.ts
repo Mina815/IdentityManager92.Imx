@@ -23,48 +23,54 @@
  * THIS SOFTWARE OR ITS DERIVATIVES.
  *
  */
+
 import { OverlayRef } from '@angular/cdk/overlay';
 import { Injectable } from '@angular/core';
 import { QerApiService } from '../qer-api-client.service';
 import { EuiLoadingService } from '@elemental-ui/core';
-import { CollectionLoadParameters, DataModel, EntitySchema, ExtendedTypedEntityCollection } from 'imx-qbm-dbts';
-import { PortalRespTeamResponsibilities, ResponsibilitiesExtendedData } from 'imx-api-qer';
+import { CollectionLoadParameters, DataModel, DisplayColumns, EntitySchema, ExtendedTypedEntityCollection, TypedEntityBuilder, ValType } from 'imx-qbm-dbts';
+import { PortalDevices, PortalRespTeamResponsibilities, ResponsibilitiesExtendedData } from 'imx-api-qer';
+
 @Injectable({
   providedIn: 'root',
 })
 export class TeamResponsibilitiesService {
   private busyIndicator: OverlayRef;
+
   constructor(
     private readonly qerClient: QerApiService,
     private readonly busyService: EuiLoadingService
-  ) { }
+    ) {}
+
   public get responsibilitySchema(): EntitySchema {
     return this.qerClient.typedClient.PortalRespTeamResponsibilities.GetSchema();
   }
+
   public handleOpenLoader(): void {
     if (!this.busyIndicator) {
       setTimeout(() => (this.busyIndicator = this.busyService.show()));
     }
   }
+
   public handleCloseLoader(): void {
-    if (this.busyIndicator) {
+    if(this.busyIndicator) {
       setTimeout(() => {
         this.busyService.hide(this.busyIndicator);
         this.busyIndicator = undefined;
       });
     }
   }
+
   public async get(parameters: CollectionLoadParameters): Promise<ExtendedTypedEntityCollection<PortalRespTeamResponsibilities, ResponsibilitiesExtendedData>> {
     return this.qerClient.typedClient.PortalRespTeamResponsibilities.Get(parameters);
   }
+
   public async getDataModel(): Promise<DataModel> {
     return this.qerClient.client.portal_resp_team_responsibilities_datamodel_get();
   }
-  public async countInactiveIdentity(): Promise<number> {
-    // The dedicated backend count endpoint (/portal/resp/team/responsibilities/count) does not
-    // exist / 404s. Derive the count client-side from the existing, working typed-client Get()
-    // call instead, using the same 'forinactive' filter the main list view uses.
-    const result = await this.get({ forinactive: '1' } as CollectionLoadParameters);
-    return result.totalCount;
+
+  public async countInactiveIdentity(): Promise<number>{
+    const responsibilities = await this.get({forinactive: '1', PageSize: -1})
+    return responsibilities.totalCount;
   }
 }

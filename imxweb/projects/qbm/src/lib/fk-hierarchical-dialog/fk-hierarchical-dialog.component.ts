@@ -47,7 +47,6 @@ import { HierarchicalFkDatabase } from './hierarchical-fk-database';
 import { HierarchicalCandidate } from './hierarchical-candidate';
 import { DataTreeWrapperComponent } from '../data-tree-wrapper/data-tree-wrapper.component';
 import { FilterTreeParameter } from '../data-source-toolbar/data-model/filter-tree-parameter';
-import { getKey }from '../cdr/edit-fk/edit-fk.model';
 
 @Component({
   selector: 'imx-fk-hierarchical-dialog',
@@ -140,7 +139,7 @@ export class FkHierarchicalDialogComponent implements OnInit, OnDestroy {
       table: this.data.fkRelations.find((fkr) => fkr.TableName === this.data.selectedTableName) || this.data.fkRelations[0],
       candidates: this.selectedEntities.map((entity) => {
         return {
-          DataValue: getKey(entity, this.data.fkRelations),
+          DataValue: this.getKey(entity),
           DisplayValue: entity.GetDisplay(),
           displayLong: entity.GetDisplayLong(),
         };
@@ -148,6 +147,15 @@ export class FkHierarchicalDialogComponent implements OnInit, OnDestroy {
     });
   }
 
+  private getKey(entity: IEntity): string {
+    if (this.data.fkRelations && this.data.fkRelations.length > 1) {
+      const xObjectKeyColumn = entity.GetColumn('XObjectKey');
+      return xObjectKeyColumn ? xObjectKeyColumn.GetValue() : undefined;
+    }
+
+    const keys = entity.GetKeys();
+    return keys && keys.length ? keys[0] : undefined;
+  }
 
   private async getPreselectedEntities(): Promise<void> {
     if (this.data.fkRelations && this.data.fkRelations.length > 0 && this.data.idList && this.data.idList.length > 0) {

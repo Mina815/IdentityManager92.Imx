@@ -3,7 +3,6 @@
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  overflow: hidden;
 
 
   .mat-card {
@@ -11,7 +10,6 @@
     flex-direction: column;
     flex: 1 1 auto;
     margin: 3px;
-    overflow: hidden;
   }
 }
 

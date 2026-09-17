@@ -175,7 +175,7 @@ export class RulesViolationsService {
     const call = await this.cplClient.typedClient.PortalRules.Get({
       filter: [
         { ColumnName: 'UID_NonCompliance', CompareOp: CompareOperator.Equal, Type: FilterType.Compare, Value1: uidNonCompliance },
-        { ColumnName: 'IsWorkingCopy', CompareOp: CompareOperator.Equal, Type: FilterType.Compare, Value1: false },
+        { ColumnName: 'isWorkingcopy', CompareOp: CompareOperator.Equal, Type: FilterType.Compare, Value1: false },
       ],
     });
     return call.Data[0];

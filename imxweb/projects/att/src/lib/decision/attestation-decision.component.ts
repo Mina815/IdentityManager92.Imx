@@ -93,20 +93,6 @@ export class AttestationDecisionComponent implements OnInit, OnDestroy {
   public get canEscalateDecisions(): boolean {
     return this.selectedCases.every((item) => item.canEscalateDecision(this.userUid));
   }
-  public get canSendInquiry(): boolean {
-    return this.selectedCases.every((item) => item.canAskAQuestion);
-  }
-  public get canRecallInquiry(): boolean {
-    return this.selectedCases.every((item) => item.IsReserved.value && item.hasAskedLastQuestion(this.userUid));
-  }
-  public get canCancelReservation(): boolean {
-    return (
-      !this.canRecallInquiry &&
-      this.selectedCases.every(
-        (item) => item.IsReserved.value && (item.hasAskedLastQuestion(this.userUid) || this.isUserEscalationApprover)
-      )
-    );
-  }
 
   public get canPerformActions(): boolean {
     return (
@@ -252,7 +238,7 @@ export class AttestationDecisionComponent implements OnInit, OnDestroy {
     return this.allLossPreviewItems.indexOf(loss) === -1 ? true : false;
   }
 
-  public async openLossDialog(func: string, cases: AttestationCase[], isEscalation: boolean): Promise<void> {
+  public async openLossDialog(func: string, cases: AttestationCase[]): Promise<void> {
     if (!this.autoRemovalScope) {
       // We can skip accumulation and go ahead with handle
       this.attestationAction[func](cases);
@@ -278,11 +264,10 @@ export class AttestationDecisionComponent implements OnInit, OnDestroy {
     }
     if (this.allLossPreviewItems.length === 0) {
       // There are no losses, go ahead with handle
-      this.attestationAction[func](cases,isEscalation);
+      this.attestationAction[func](cases);
       return;
     }
     // There are losses, show them
-    this.lossPreview.Case = undefined;
     this.lossPreview.LossPreviewItems = this.allLossPreviewItems;
     const selection = await this.dialog
       .open(LossPreviewDialogComponent, {
@@ -297,7 +282,7 @@ export class AttestationDecisionComponent implements OnInit, OnDestroy {
 
     if (selection) {
       // Handle function
-      this.attestationAction[func](cases,isEscalation);
+      this.attestationAction[func](cases);
     }
   }
 
@@ -362,11 +347,10 @@ export class AttestationDecisionComponent implements OnInit, OnDestroy {
 
     try {
       const groupedData = this.groupedData[groupInfo.key];
-      if (!groupedData?.navigationState) {
-        return;
-      }
       const navigationState = { ...groupedData.navigationState, Escalation: this.viewEscalation };
-      groupedData.data = groupInfo.isInitial ? { totalCount: 0, Data: [] } : await this.attestationCases.get(navigationState);
+      groupedData.data = groupInfo.isInitial
+        ? { totalCount: 0, Data: [] }
+        : await this.attestationCases.get(navigationState);
       groupedData.settings = {
         displayedColumns: this.dstSettings.displayedColumns,
         dataModel: this.dstSettings.dataModel,
@@ -459,9 +443,9 @@ export class AttestationDecisionComponent implements OnInit, OnDestroy {
       .toPromise();
 
     if (decision === 'approve') {
-      await this.attestationAction.approve([attestationCase],this.viewEscalation);
+      await this.attestationAction.approve([attestationCase]);
     } else if (decision === 'deny') {
-      await this.attestationAction.deny([attestationCase],this.viewEscalation);
+      await this.attestationAction.deny([attestationCase]);
     }
   }
 
@@ -544,10 +528,10 @@ export class AttestationDecisionComponent implements OnInit, OnDestroy {
 
     switch (this.decisionAction) {
       case AttestationDecisionAction.approve:
-        this.attestationAction.approve(this.dstSettings.dataSource.Data as AttestationCase[], this.viewEscalation);
+        this.attestationAction.approve(this.dstSettings.dataSource.Data as AttestationCase[]);
         break;
       case AttestationDecisionAction.deny:
-        this.attestationAction.deny(this.dstSettings.dataSource.Data as AttestationCase[], this.viewEscalation);
+        this.attestationAction.deny(this.dstSettings.dataSource.Data as AttestationCase[]);
         break;
       case AttestationDecisionAction.denydecision:
         this.attestationAction.denyDecisions(this.dstSettings.dataSource.Data as AttestationCase[]);

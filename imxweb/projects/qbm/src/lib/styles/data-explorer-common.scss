@@ -21,7 +21,8 @@
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     z-index: 100;
-    border: 1px solid rgba($color-blue-60, 0.6);
+    //border: 1px solid rgba($color-blue-60, 0.6);
+    border: 1px solid rgba(#60498C, 0.6);
     margin-bottom: 20px;
 
     .data-explorer-card-header-bg {
@@ -35,7 +36,7 @@
       height: 45px;
 
       .eui-icon {
-        color: rgba($color-blue-60, 0.6);
+        //color: rgba($color-blue-60, 0.6);
         margin-right: 10px;
       }
       .mat-icon-button{

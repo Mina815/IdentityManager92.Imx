@@ -69,27 +69,6 @@ export class RequestHistoryService {
     if (!collection) {
       return undefined;
     }
-
-    return this.buildRequestCollection(userUid, collection);
-  }
-
-  public async getRequest(userUid: string, uidPwo: string, signal: AbortSignal): Promise<ItshopRequest> {
-    const collection = await this.qerClient.typedClient.PortalItshopRequests.Get(
-      { uidpwo: uidPwo, PageSize: 1, StartIndex: 0 },
-      { signal }
-    );
-
-    if (!collection) {
-      return undefined;
-    }
-
-    return this.buildRequestCollection(userUid, collection).Data[0];
-  }
-
-  private buildRequestCollection(
-    userUid: string,
-    collection: ExtendedTypedEntityCollection<PortalItshopRequests, PwoExtendedData>
-  ): ExtendedTypedEntityCollection<ItshopRequest, PwoExtendedData> {
     return {
       ...collection,
       Data: collection.Data.map((element, index) => {

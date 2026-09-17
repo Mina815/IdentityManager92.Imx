@@ -109,7 +109,8 @@ export class AppService {
     const imxConfig = await this.systemInfoService.getImxConfig();
     const name = imxConfig.ProductName || Globals.QIM_ProductNameFull;
     this.config.Config.Title = await this.translateService.get('#LDS#Heading Web Portal').toPromise();
-    const title = `${name} ${this.config.Config.Title}`;
+    //const title = `${name} ${this.config.Config.Title}`;
+     const title = '';
     this.title.setTitle(title);
 
     await this.updateSplash(title);
@@ -125,7 +126,8 @@ export class AppService {
 
   private showSplash(): void {
     // open splash screen with fix values
-    this.splash.init({ applicationName: 'One Identity Manager Portal' });
+    //this.splash.init({ applicationName: 'One Identity Manager Portal' });
+    this.splash.init({ applicationName: '' });
   }
 
   private async updateSplash(title: string): Promise<void> {

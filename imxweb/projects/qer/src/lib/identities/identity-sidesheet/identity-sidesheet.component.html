@@ -10,7 +10,9 @@
             <mat-tab label="{{ '#LDS#Heading Hyperview' | translate }}">
               <ng-template matTabContent>
                 <div eui-sidesheet-content>
-                  <imx-object-hyperview [objectType]="data?.selectedIdentity?.GetEntity()?.TypeName" [objectUid]="data?.selectedIdentity?.GetEntity()?.GetKeys()[0]">
+                  <imx-object-hyperview
+                    [objectType]="data?.selectedIdentity?.GetEntity()?.TypeName"
+                    [objectUid]="data?.selectedIdentity?.GetEntity()?.GetKeys()[0]">
                   </imx-object-hyperview>
                 </div>
               </ng-template>
@@ -69,6 +71,7 @@
               <mat-slide-toggle
                 *ngIf="data.isAdmin"
                 class="custom-toggle"
+                [disabled]="!data.canEdit"
                 #toggle
                 [formControl]="isActiveFormControl"
                 (change)="onIsActiveToggleChanged($event)"
@@ -135,6 +138,7 @@
             </mat-accordion>
           </form>
         </div>
+
       </div>
     </ng-template>
   </mat-tab>
@@ -183,7 +187,7 @@
     (click)="initiateDelete()"
     data-imx-identifier="identity-sidesheet-delete"
   >
-    <eui-icon icon="userremove"></eui-icon>
+      <eui-icon icon="userremove"></eui-icon>
     <span translate>#LDS#Delete</span>
   </button>
   <button mat-stroked-button data-imx-identifier="identity-sidesheet-actions" title="{{ '#LDS#Actions' | translate }}" [matMenuTriggerFor]="actionsMenu">

@@ -43,8 +43,9 @@ export class RequestRuleViolation implements IExtension {
     if (this.dstSettings?.extendedData) {
       for (let i = 0; i < this.dstSettings.dataSource.Data.length; i++) {
         const item = this.dstSettings.dataSource.Data[i] as ItshopRequest;
-        const workflowHistory = item.pwoData?.WorkflowHistory?.Entities ?? [];
-        item.complianceRuleViolation = workflowHistory.some((wh: EntityData) => wh.Columns['UID_ComplianceRule']?.Value?.length > 0);
+        item.complianceRuleViolation = item.pwoData.WorkflowHistory.Entities.filter((wh: EntityData) =>
+          wh.Columns['UID_ComplianceRule']?.Value?.length > 0
+        ).length > 0;
       }
     }
 

@@ -16,6 +16,7 @@ $source_sans_pro_font_path: "~node_modules/@elemental-ui/core/assets/Source_Sans
     position: fixed;
     left: 0;
 }
+
 // ToDo (als Teil von 254128): später wieder einbinden, wenn wir den Styleguide soweit haben
 // .pageContent > :last-child > h1 {
 //   font-size: 24px;
@@ -36,6 +37,8 @@ imx-data-explorer-accounts {
         overflow: hidden;
         display: flex;
         flex-direction: column;
+        align-self:var(--alignself);
+        width:var(--width);
 
         > :nth-child(2) {
             flex: 1 1 auto;
@@ -66,6 +69,8 @@ imx-data-explorer-accounts {
 {
     display: flex !important;  // TODO: Task 268556 : Styling direkt in der Komponente umsetzen
     flex-direction: column;
+   align-self:var(--alignself);
+   width:var(--width);
 }
 
 .governance-sidesheet__tab-content {
@@ -84,6 +89,7 @@ imx-data-explorer-accounts {
         background-color:$color-gray-80;
         .mat-toolbar{
             background-color: $color-blue-80;
+           
         }
         .background--asher-gray{
             background-color: $color-gray-80;
@@ -106,13 +112,116 @@ imx-data-explorer-accounts {
       background-color:$color-gray-100;
       .mat-toolbar{
           background-color: $color-blue-90;
+         
       }
       .background--asher-gray{
           background-color: $color-gray-90;
       }
   }
+  
   .eui-sidesheet-actions.mat-card.eui-sidesheet-actions--white{
       background-color: $color-gray-90;
   }
+  .mat-card-subtitle{
+    overflow: visible;
+    display: flex;
 }
+
+}
+
+tr.mat-row, th.mat-header-cell, td.mat-cell, td.mat-footer-cell{
+    text-align-last:var(--textalignlast);
+  }
+
+.eui-sidesheet,.mat-calendar {
+    direction:var(--direction);
+}
+.mat-dialog-title,.mat-card>:first-child, .mat-card-content>:first-child{
+    direction: var(--direction);
+  }
+.eui-sidesheet .mat-toolbar{
+    direction:var(--direction);
+}
+.eui-sidesheet-content,.eui-sidesheet-actions{
+    direction:var(--direction);
+}
+ .mat-expansion-panel-header-title, .mat-expansion-panel-header-description{
+    direction: var(--direction);
+ }
+
+.mat-dialog-title{
+    direction: var(--direction);
+  }
+.mat-raised-button{
+      margin: 3px !important;
+    }
+.mat-card-subtitle{
+    overflow: visible;
+    direction: var(--direction);
+    //display: flex;
+    align-self: var(--alignselfmatcardsubtitle);
+}
+.mat-card.mat-card.mat-focus-indicator.data-explorer{
+    align-self: var(--alignself);
+    width: var(--width);
+}
+.mat-card .mat-focus-indicator .imx-data-tree-container{
+    align-self: var(--alignself);
+    width: var(--width);
+}
+.mat-dialog-actions{
+    direction: var(--direction);
+}
+.cmp-messagebox[_ngcontent-shp-c343]{
+    direction: var(--direction);
+}
+.mat-dialog-content {
+    direction: var(--direction);
+}
+.mat-drawer-content{
+    width: var(--widthmatdrawer);
+}
+.imx-data-source-toolbar-container .imx-data-source-selected-filters .mat-chip .eui-icon.remove {
+    font-size: 18px;
+    margin-right: 3px !important;
+}
+
+ .mat-form-field-appearance-outline .mat-form-field-outline-gap {
+  margin-right: 0 !important;
+  margin-left: auto !important;
+}
+
+mat-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* optional spacing */
+}
+
+mat-toolbar > .eui-sidesheet__heading-text {
+  flex: 1; /* pushes the close icon to the opposite edge */
+  text-align: start; /* or right if in RTL */
+}
+::ng-deep eui-splash-screen eui-logo svg {
+  display: none !important;
+}
+
+::ng-deep eui-splash-screen eui-logo {
+  background-image: url("assets/hwyati.png") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+  width: 120px !important;
+  height: 56px !important;
+  display: inline-block !important;
+  color: transparent !important;
+}
+
+
+
+
+
+
+
+
+
 

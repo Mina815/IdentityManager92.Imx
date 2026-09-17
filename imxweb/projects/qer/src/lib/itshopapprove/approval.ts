@@ -42,10 +42,6 @@ export class Approval extends PortalItshopApproveRequests implements RequestPara
     return this.workflowWrapper.userAskedLastQuestion(this.currentUser, this.DecisionLevel.value);
   }
 
-  public get hasOpenQuestions(): boolean {
-    return this.workflowWrapper.hasOpenQuestions(this.DecisionLevel.value);
-  }
-
   public get canRecallInquiry(): boolean {
     return this.IsReserved.value && this.hasAskedLastQuestion;
   }
@@ -136,9 +132,7 @@ export class Approval extends PortalItshopApproveRequests implements RequestPara
   }
 
   public canDelegateDecision(userUid: string): boolean {
-     const instead = userUid === '' ? this.workflowWrapper?.isInsteadOfAllowedForEscalation(this.UID_QERWorkingMethod.value, this.DecisionLevel.value)
-     :  this.workflowWrapper?.isInsteadOfAllowed(userUid, this.DecisionLevel.value);
-    return !this.IsReserved.value && instead;
+    return !this.IsReserved.value && this.workflowWrapper?.isInsteadOfAllowed(userUid, this.DecisionLevel.value);
   }
 
   public canWithdrawAdditionalApprover(userUid: string): boolean {

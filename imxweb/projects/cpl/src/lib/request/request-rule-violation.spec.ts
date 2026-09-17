@@ -30,43 +30,4 @@ describe('RequestRuleViolation', () => {
   it('should create an instance', () => {
     expect(new RequestRuleViolation()).toBeTruthy();
   });
-
-  it('should tolerate lightweight request history rows without PWO extended data', () => {
-    const extension = new RequestRuleViolation();
-    const item = {};
-
-    expect(() => {
-      extension.inputData = {
-        dataSource: {
-          Data: [item],
-        },
-        extendedData: [],
-      } as any;
-    }).not.toThrow();
-
-    expect((item as any).complianceRuleViolation).toBeFalse();
-  });
-
-  it('should mark rows with compliance rule violations', () => {
-    const extension = new RequestRuleViolation();
-    const item = {
-      pwoData: {
-        WorkflowHistory: {
-          Entities: [
-            { Columns: { UID_ComplianceRule: { Value: '' } } },
-            { Columns: { UID_ComplianceRule: { Value: 'uid-compliance-rule' } } },
-          ],
-        },
-      },
-    };
-
-    extension.inputData = {
-      dataSource: {
-        Data: [item],
-      },
-      extendedData: [{}],
-    } as any;
-
-    expect((item as any).complianceRuleViolation).toBeTrue();
-  });
 });

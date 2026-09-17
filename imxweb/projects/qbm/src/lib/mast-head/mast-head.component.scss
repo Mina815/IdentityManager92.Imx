@@ -11,7 +11,11 @@
   .imx-masthead-space {
     flex: 1 1 auto;
   }
-
+.imx-masthead-external-link {
+      min-width: auto;
+      padding: 0 12px;
+      width: auto;
+    }
   .imx-masthead--controls {
     button[mat-button] {
       &:not(.imx-masthead-user-button) {
@@ -28,12 +32,6 @@
         display: none;
       }
     }
-
-    .imx-masthead-external-link {
-      min-width: auto;
-      padding: 0 12px;
-      width: auto;
-    }
   }
 }
 
@@ -43,7 +41,8 @@
 }
 
 .custom-logo {
-  margin-left: -16px;
+  //margin-left: -16px;
+  margin-left: -1px;
   max-height: 50px;
   max-width: 300px;
   cursor: pointer;

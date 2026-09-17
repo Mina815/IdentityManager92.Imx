@@ -36,7 +36,6 @@ import { ViewConfigData } from 'imx-api-qer';
 import {
   BusyService,
   ClassloggerService,
-  ClientPropertyForTableColumns,
   DataModelWrapper,
   DataSourceToolbarFilter,
   DataSourceToolbarSettings,
@@ -44,7 +43,6 @@ import {
   DataSourceWrapper,
   DataTableComponent,
   DataTableGroupedData,
-  SystemInfoService,
 } from 'qbm';
 import { ViewConfigService } from 'qer';
 import { Subscription } from 'rxjs';
@@ -68,7 +66,6 @@ import { RulesViolationsService } from './rules-violations.service';
 })
 export class RulesViolationsComponent implements OnInit, OnDestroy {
   @Input() public isMControlPerViolation: boolean;
-  public hasRiskIndex = false;
   public dataModelWrapper: DataModelWrapper;
   public dstWrapper: DataSourceWrapper<RulesViolationsApproval>;
   public dstSettings: DataSourceToolbarSettings;
@@ -91,15 +88,14 @@ export class RulesViolationsComponent implements OnInit, OnDestroy {
     private readonly sidesheet: EuiSidesheetService,
     private readonly translate: TranslateService,
     private readonly logger: ClassloggerService,
-    private readonly systemInfoService: SystemInfoService,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly elementalBusyService: EuiLoadingService,
+    private readonly elementalBusyService: EuiLoadingService
   ) {
     this.subscriptions.push(
       this.actionService.applied.subscribe(async () => {
         this.getData();
         this.table.clearSelection();
-      }),
+      })
     );
   }
 
@@ -110,24 +106,6 @@ export class RulesViolationsComponent implements OnInit, OnDestroy {
       this.entitySchema = entitySchema;
       // If this wasn't already set, then we need to get it from the config
       this.isMControlPerViolation ??= (await this.rulesViolationsService.featureConfig()).MitigatingControlsPerViolation;
-      this.hasRiskIndex = (await this.systemInfoService.get()).PreProps?.includes('RISKINDEX') ?? false;
-
-      const displayedColumns: ClientPropertyForTableColumns[] = [
-        entitySchema.Columns.UID_Person,
-        entitySchema.Columns.UID_NonCompliance,
-        entitySchema.Columns.State,
-      ];
-
-      if (this.hasRiskIndex) {
-        displayedColumns.push(entitySchema.Columns.RiskIndexCalculated, entitySchema.Columns.RiskIndexReduced);
-      }
-
-      displayedColumns.push({
-        ColumnName: 'decision',
-        Type: ValType.String,
-        afterAdditionals: true,
-        untranslatedDisplay: '#LDS#Approval decision',
-      });
 
       this.dataModelWrapper = {
         dataModel: await this.rulesViolationsService.getDataModel(),
@@ -141,9 +119,21 @@ export class RulesViolationsComponent implements OnInit, OnDestroy {
           isInitial
             ? Promise.resolve({ totalCount: 0, Data: [] })
             : this.rulesViolationsService.getRulesViolationsApprove(state, requestOpts),
-        displayedColumns,
+        [
+          entitySchema.Columns.UID_Person,
+          entitySchema.Columns.UID_NonCompliance,
+          entitySchema.Columns.State,
+          entitySchema.Columns.RiskIndexCalculated,
+          entitySchema.Columns.RiskIndexReduced,
+          {
+            ColumnName: 'decision',
+            Type: ValType.String,
+            afterAdditionals: true,
+            untranslatedDisplay: '#LDS#Approval decision',
+          },
+        ],
         entitySchema,
-        this.dataModelWrapper,
+        this.dataModelWrapper
       );
 
       this.subscriptions.push(this.activatedRoute.queryParams.subscribe((params) => this.updateFiltersFromRouteParams(params)));
@@ -175,7 +165,7 @@ export class RulesViolationsComponent implements OnInit, OnDestroy {
       const dstSettings = await this.dstWrapper.getDstSettings(
         parameter,
         { signal: this.rulesViolationsService.abortController.signal },
-        isInitialLoad,
+        isInitialLoad
       );
       if (dstSettings) {
         this.dstSettings = dstSettings;

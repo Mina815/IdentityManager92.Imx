@@ -28,6 +28,20 @@ import { Injectable } from '@angular/core';
 import { EuiDownloadOptions } from '@elemental-ui/core';
 
 import {
+  CollectionLoadParameters,
+  EntityCollectionData,
+  GroupInfoData,
+  DataModel,
+  MethodDefinition,
+  TypedEntity,
+  TypedEntityBuilder,
+  TypedEntityCollectionData,
+  EntitySchema,
+  IReadValue,
+  FilterTreeData,
+  MethodDescriptor,
+} from 'imx-qbm-dbts';
+import {
   ApiClientMethodFactory,
   AttestationCaseData,
   DecisionInput,
@@ -41,27 +55,13 @@ import {
   ReasonInput,
   V2ApiClientMethodFactory,
 } from 'imx-api-att';
-import {
-  CollectionLoadParameters,
-  DataModel,
-  EntityCollectionData,
-  EntitySchema,
-  FilterTreeData,
-  GroupInfoData,
-  IReadValue,
-  MethodDefinition,
-  MethodDescriptor,
-  TypedEntity,
-  TypedEntityBuilder,
-  TypedEntityCollectionData,
-} from 'imx-qbm-dbts';
-import { AppConfigService, DataSourceToolbarExportMethod, ElementalUiConfigService } from 'qbm';
-import { ApproverContainer, ParameterDataLoadParameters, ParameterDataService } from 'qer';
 import { ApiService } from '../api.service';
-import { AttestationCaseLoadParameters } from '../attestation-history/attestation-case-load-parameters.interface';
-import { Approvers } from './approvers.interface';
 import { AttestationCase } from './attestation-case';
+import { ParameterDataService, ParameterDataLoadParameters, ApproverContainer } from 'qer';
+import { AppConfigService, DataSourceToolbarExportMethod, ElementalUiConfigService, ParameterizedTextComponent } from 'qbm';
 import { AttestationDecisionLoadParameters } from './attestation-decision-load-parameters';
+import { Approvers } from './approvers.interface';
+import { AttestationCaseLoadParameters } from '../attestation-history/attestation-case-load-parameters.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -77,7 +77,7 @@ export class AttestationCasesService {
     private readonly attClient: ApiService,
     private readonly parameterDataService: ParameterDataService,
     private readonly elementalUiConfigService: ElementalUiConfigService,
-    private readonly config: AppConfigService,
+    private readonly config: AppConfigService
   ) {}
 
   public get attestationApproveSchema(): EntitySchema {
@@ -90,12 +90,11 @@ export class AttestationCasesService {
 
   public async get(
     attDecisionParameters?: AttestationDecisionLoadParameters,
-    signal?: AbortSignal,
+    signal?: AbortSignal
   ): Promise<TypedEntityCollectionData<AttestationCase>> {
     const collection = await this.attClient.typedClient.PortalAttestationApprove.Get(attDecisionParameters, { signal });
     if (!collection) return undefined;
     return {
-      ...collection,
       tableName: collection?.tableName,
       totalCount: collection?.totalCount,
       Data: collection?.Data.map((item: PortalAttestationApprove, index: number) => {
@@ -103,7 +102,7 @@ export class AttestationCasesService {
           item.GetEntity(),
           { ...collection?.extendedData, ...{ index } },
           (parameters) => this.getParameterCandidates(parameters),
-          (treefilterparameter) => this.getFilterTree(treefilterparameter),
+          (treefilterparameter) => this.getFilterTree(treefilterparameter)
         );
 
         return new AttestationCase(item, parameterDataContainer, { ...collection?.extendedData, ...{ index } });
@@ -149,14 +148,14 @@ export class AttestationCasesService {
       DecisionLevel: IReadValue<number>;
       UID_QERWorkingMethod: IReadValue<string>;
       data: AttestationCaseData;
-    },
+    }
   ): Promise<Approvers> {
     const approverContainer = new ApproverContainer({
       decisionLevel: attestationCase.DecisionLevel.value,
       qerWorkingMethod: attestationCase.UID_QERWorkingMethod.value,
       pwoData: attestationCase.data,
       approvers: (await this.attClient.client.portal_attestation_persondecision_get(this.getKey(attestationCase))).Entities.map(
-        (item) => item.Columns.UID_Person.Value,
+        (item) => item.Columns.UID_Person.Value
       ),
     });
 
@@ -170,7 +169,7 @@ export class AttestationCasesService {
   public createHistoryTypedEntities(data: AttestationCaseData): TypedEntityCollectionData<PortalAttestationCaseHistory> {
     return this.historyBuilder.buildReadWriteEntities(
       data.WorkflowHistory,
-      this.attClient.typedClient.PortalAttestationCaseHistory.GetSchema(),
+      this.attClient.typedClient.PortalAttestationCaseHistory.GetSchema()
     );
   }
 
@@ -307,7 +306,7 @@ export class AttestationCasesService {
       parameters.columnName,
       parameters.fkTableName,
       parameters.diffData,
-      parameter,
+      parameter
     );
   }
 
@@ -320,7 +319,7 @@ export class AttestationCasesService {
       parameters.columnName,
       parameters.fkTableName,
       parameters.diffData,
-      parameter,
+      parameter
     );
   }
 }

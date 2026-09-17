@@ -24,32 +24,31 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 
 import {
-  CollectionLoadParameters,
-  CompareOperator,
-  DataModel,
-  DataModelFilter,
-  DbObjectKey,
-  DisplayColumns,
-  EntitySchema,
-  FilterData,
-  FilterType,
-  IForeignKeyInfo,
-  TypedEntity,
   TypedEntityBuilder,
+  CollectionLoadParameters,
+  DisplayColumns,
   ValType,
+  TypedEntity,
+  IForeignKeyInfo,
+  FilterType,
+  CompareOperator,
+  DbObjectKey,
+  DataModelFilter,
+  FilterData,
+  DataModel,
 } from 'imx-qbm-dbts';
-import { BusyService } from '../base/busy.service';
-import { MetadataService } from '../base/metadata.service';
 import { ClassloggerService } from '../classlogger/classlogger.service';
-import { ClientPropertyForTableColumns } from '../data-source-toolbar/client-property-for-table-columns';
+import { MetadataService } from '../base/metadata.service';
 import { DataSourceToolbarSettings } from '../data-source-toolbar/data-source-toolbar-settings';
-import { DataTableComponent } from '../data-table/data-table.component';
-import { SettingsService } from '../settings/settings-service';
 import { CandidateEntity } from './candidate-entity';
+import { DataTableComponent } from '../data-table/data-table.component';
 import { ForeignKeyPickerData } from './foreign-key-picker-data.interface';
+import { SettingsService } from '../settings/settings-service';
+import { ClientPropertyForTableColumns } from '../data-source-toolbar/client-property-for-table-columns';
+import { BusyService } from '../base/busy.service';
 
 @Component({
   selector: 'imx-fk-selector',
@@ -71,16 +70,16 @@ export class FkSelectorComponent implements OnInit {
   @Output() public selectedCandidatesChanges = new EventEmitter();
 
   public busyService = new BusyService();
-  public entitySchema: EntitySchema = CandidateEntity.GetEntitySchema();
 
   private readonly builder = new TypedEntityBuilder(CandidateEntity);
+  private readonly entitySchema = CandidateEntity.GetEntitySchema();
   private filters: DataModelFilter[];
   private dataModel: DataModel;
 
   constructor(
     public readonly metadataProvider: MetadataService,
     private readonly settingsService: SettingsService,
-    private readonly logger: ClassloggerService,
+    private readonly logger: ClassloggerService
   ) {}
 
   public async ngOnInit(): Promise<void> {
@@ -90,7 +89,6 @@ export class FkSelectorComponent implements OnInit {
       this.logger.trace(this, 'Pre-select the first candidate table');
       this.selectedTable = this.data.fkRelations.find((fkr) => fkr.TableName === this.data.selectedTableName) || this.data.fkRelations[0];
       this.dataModel = await this.selectedTable.GetDataModel();
-      this.entitySchema = CandidateEntity.GetEntitySchema(this.selectedTable.TableName);
       this.filters = this.dataModel.Filters;
     }
 

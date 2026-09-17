@@ -27,14 +27,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { CollectionLoadParameters, DataModel, DisplayColumns, EntitySchema } from 'imx-qbm-dbts';
-import {
-  BusyService,
-  ClassloggerService,
-  DataSourceToolbarExportMethod,
-  DataSourceToolbarGroupData,
-  DataSourceToolbarSettings,
-  createGroupData,
-} from 'qbm';
+import { BusyService, ClassloggerService, DataSourceToolbarGroupData, DataSourceToolbarSettings, createGroupData } from 'qbm';
 import { ListReportDataProvider } from './list-report-data-provider.interface';
 
 /**
@@ -143,11 +136,8 @@ export class ListReportViewerComponent implements OnInit {
         this.logger.warn(this, 'There was a problem, loading the columns. The displays of the objects will be shown instead');
       }
 
-      let exportMethod: DataSourceToolbarExportMethod | undefined;
-      if (this.dataService.exportReports) {
-        exportMethod = this.dataService.exportReports(this.navigationState);
-        exportMethod.initialColumns = displayedColumns.map((col) => col.ColumnName);
-      }
+      const exportMethod = this.dataService.exportReports(this.navigationState);
+      exportMethod.initialColumns = displayedColumns.map((col) => col.ColumnName);
 
       this.dstSettings = {
         dataSource: data,
@@ -196,7 +186,7 @@ export class ListReportViewerComponent implements OnInit {
           },
           ...parameters,
         }),
-      [],
+      []
     );
   }
 }

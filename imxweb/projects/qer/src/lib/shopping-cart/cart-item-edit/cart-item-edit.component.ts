@@ -24,8 +24,8 @@
  *
  */
 
-import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { FormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, QueryList, ViewChildren } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
 import { EuiSidesheetRef, EUI_SIDESHEET_DATA } from '@elemental-ui/core';
 import { Subscription } from 'rxjs';
 
@@ -40,15 +40,11 @@ import { ConfirmationService, EntityColumnEditorComponent } from 'qbm';
   selector: 'imx-cart-item-edit',
   styleUrls: ['./cart-item-edit.component.scss'],
 })
-export class CartItemEditComponent implements OnInit, OnDestroy {
+export class CartItemEditComponent implements OnDestroy {
   public readonly shoppingCartItem: PortalCartitem;
   public readonly cartItemForm = new UntypedFormGroup({});
-  public formGroupIsPending = false;
   public columns: IEntityColumn[];
   private readonly subscriptions: Subscription[] = [];
-  public orderReasonType: number;
-
-  private justificationRequiresText: boolean = false;
 
   @ViewChildren(EntityColumnEditorComponent) editors: QueryList<EntityColumnEditorComponent>;
 
@@ -57,7 +53,7 @@ export class CartItemEditComponent implements OnInit, OnDestroy {
     public readonly cartItemSvc: CartItemsService,
     public readonly sideSheetRef: EuiSidesheetRef,
     confirmation: ConfirmationService,
-    private readonly changeDetector: ChangeDetectorRef
+    changeDetector: ChangeDetectorRef
   ) {
     this.shoppingCartItem = this.data.entityWrapper.typedEntity;
 
@@ -82,43 +78,8 @@ export class CartItemEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  public async ngOnInit(): Promise<void> {
-    this.justificationRequiresText = await this.cartItemSvc.getJustificationTextIsRequired(
-      this.shoppingCartItem.UID_QERJustificationOrder.value
-    );
-
-    this.shoppingCartItem.UID_QERJustificationOrder.Column.ColumnChanged.subscribe(async () => {
-      this.justificationRequiresText = await this.cartItemSvc.getJustificationTextIsRequired(
-        this.shoppingCartItem.UID_QERJustificationOrder.value
-      );
-    });
-  }
-
   ngOnDestroy(): void {
     this.subscriptions.forEach((s) => s.unsubscribe());
-  }
-
-  public onPendingChanged(value: boolean) {
-    this.formGroupIsPending = value;
-  }
-
-  public addControl(name: string, control: FormControl): void {
-    this.cartItemForm.removeControl(name);
-    this.changeDetector.detectChanges();
-    this.cartItemForm.addControl(name, control);
-    this.changeDetector.detectChanges();
-    control.updateValueAndValidity({ onlySelf: false, emitEvent: true });
-  }
-
-  public isMandatory(column: IEntityColumn): boolean {
-    switch (column.ColumnName) {
-      case 'OrderReason':
-        return this.orderReasonType === 2 || this.justificationRequiresText;
-      case 'UID_QERJustificationOrder':
-        return this.orderReasonType === 1;
-    }
-
-    return false;
   }
 
   private initColumns(): void {
@@ -133,8 +94,6 @@ export class CartItemEditComponent implements OnInit, OnDestroy {
     } else {
       defaultColumns.push(this.shoppingCartItem.ValidFrom.Column, this.shoppingCartItem.ValidUntil.Column);
     }
-
-    this.orderReasonType = this.shoppingCartItem.OrderReasonType.value;
 
     this.columns = this.mergeColumns(
       (this.data.entityWrapper.parameterCategoryColumns ?? []).map((item) => item.column),

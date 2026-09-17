@@ -59,17 +59,18 @@ export interface WorkflowActionEdit {
   /**
    * Whether or not the decision shows the decision guidance tab
    */
-  withGuidance?: boolean;
+  withGuidance?:boolean;
+
 
   /**
    * Information about the workflow so far.
    */
   workflow?: {
-    entitySchema: EntitySchema;
-    display: { primary: IClientProperty; secondary?: IClientProperty };
-    data: { [key: string]: IEntity[] };
-    title: string;
-    placeholder: string;
+    entitySchema: EntitySchema,
+    display: { primary: IClientProperty, secondary?: IClientProperty },
+    data: { [key: string]: IEntity[] },
+    title: string,
+    placeholder: string
   };
 
   /**
@@ -78,8 +79,8 @@ export interface WorkflowActionEdit {
    * If given and specified these values are meant to be applied to all requests where such a value can be applied.
    */
   showValidDate?: {
-    validFrom?: { key: string; placeholder: string };
-    validUntil?: { key: string; placeholder: string };
+    validFrom?: { key: string, placeholder: string };
+    validUntil?: { key: string, placeholder: string };
   };
 
   /**
@@ -87,8 +88,6 @@ export interface WorkflowActionEdit {
    */
   customValidation?: {
     validate: () => boolean;
-    message: string;
+    message: string
   };
-
-  isInEscalationView?: boolean;
 }

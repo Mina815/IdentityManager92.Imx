@@ -53,11 +53,6 @@ export class EntityColumnEditorComponent implements OnChanges {
   @Input() public column: IEntityColumn;
 
   /**
-   * An entity column, that should be edited with a {@link CdrEditor | column dependent reference editor}.
-   */
-  @Input() public isMandatory: boolean;
-
-  /**
    * Indicator, whether the control should be displayed as read-only.
    */
   @Input() public readonly: boolean;
@@ -67,11 +62,6 @@ export class EntityColumnEditorComponent implements OnChanges {
    * Only after this, the component can be added to a formGroup or FormArray.
    */
   @Output() public controlCreated = new EventEmitter<{ name: string; control: AbstractControl }>();
-  
-  /**
-   * An event, that is emitted, if the value of the cdr is pending.
-   */
-  @Output() public readonly pendingChanged = new EventEmitter<boolean>();
 
   /**
    * @ignore Used in template only.
@@ -84,12 +74,11 @@ export class EntityColumnEditorComponent implements OnChanges {
    * @param changes The changes that are applied (only column and readonly is evaluated).
    */
   public ngOnChanges(changes: SimpleChanges): void {
-    if (changes['column'] || changes['readonly'] || changes['isMandatory']) {
+    if (changes['column'] || changes['readonly']) {
       this.cdr = this.column
         ? {
             column: this.column,
             isReadOnly: () => this.readonly || !this.column.GetMetadata().CanEdit(),
-            minLength: this.isMandatory ? 1:0
           }
         : undefined;
     }
