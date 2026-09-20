@@ -12,7 +12,7 @@
     >
     </eui-theme-switcher>
     <imx-cdr-editor class="fullwidth" [cdr]="timeZoneCdr"></imx-cdr-editor>
-    <mat-slide-toggle *ngIf="profileSettings" [(ngModel)]="profileSettings.UseProfileLanguage" [disabled]="!userCulture">
+    <mat-slide-toggle *ngIf="profileSettings" [(ngModel)]="profileSettings.UseProfileLanguage" >
       {{ '#LDS#Use profile language' | translate }}
       <span *ngIf="userCulture">({{ userCulture }})</span>
     </mat-slide-toggle>
