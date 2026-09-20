@@ -67,7 +67,7 @@
     <imx-ext class="imx-flexible-tile-row" id="Dashboard-SmallTiles" [referrer]="this"></imx-ext>
   </div>
   <div [ngClass]="{ hidden: !viewReady, 'imx-flexible-tile-row': true }">
-    <imx-icon-tile
+    <!-- <imx-icon-tile
       *ngIf="viewReady && ShowPasswordTile()"
       data-imx-identifier="start-tile-no-password-query-and-answer-set"
       [caption]="'#LDS#Heading Password Questions' | translate"
@@ -85,7 +85,7 @@
           <eui-icon size="m" icon="forward"></eui-icon>
         </button>
       </ng-template>
-    </imx-icon-tile>
+    </imx-icon-tile> -->
 
     <imx-notification-tile data-imx-identifier="start-noficationtile-enable-notifications" *ngIf="projectConfig?.VI_Common_EnableNotifications"> </imx-notification-tile>
 
