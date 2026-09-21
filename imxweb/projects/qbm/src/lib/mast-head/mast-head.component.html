@@ -29,10 +29,10 @@
     <eui-icon icon="user"></eui-icon>
     <span>{{ sessionState?.Username }}</span>
   </button>
-  <a mat-button class="imx-masthead-external-link" [href]="externalLinkUrl" target="_blank" rel="noopener noreferrer"
+  <!-- <a mat-button class="imx-masthead-external-link" [href]="externalLinkUrl" target="_blank" rel="noopener noreferrer"
     data-imx-identifier="masthead-external-link">
     <span>{{ externalLinkLabel }}</span>
-  </a>
+  </a> -->
   <mat-menu #imxUserMenu="matMenu">
     <ng-content select="[imx-profile-menu-items]"></ng-content>
     <button mat-menu-item data-imx-identifier="user-menu-signout" (click)="logout()">

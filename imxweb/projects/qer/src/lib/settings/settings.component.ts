@@ -87,16 +87,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
     try
     {
       switch (this.app) {
-        // case portalApp:
-        //   this.profileSettings = await this.qerClient.client.portal_profile_get();
-        //   this.userCulture = (await this.qerClient.client.portal_profile_person_get())?.ProfileLanguage;
-        //   break;
-        case portalApp: 
-          this.profileSettings = await this.qerClient.client.portal_profile_get();  
-          if (!this.profileSettings.UseProfileLanguage) {   
-              this.profileSettings.UseProfileLanguage = true;   
-              await this.qerClient.client.portal_profile_post( this.profileSettings    );
-              }
+        case portalApp:
+          this.profileSettings = await this.qerClient.client.portal_profile_get();
           break;
         case passwordResetApp:
           this.profileSettings = await this.qerClient.client.passwordreset_profile_get();

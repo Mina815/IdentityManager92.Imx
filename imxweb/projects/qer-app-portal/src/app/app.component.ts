@@ -110,6 +110,10 @@ export class AppComponent implements OnInit, OnDestroy {
           const features = featuresResp.Features;
           const groups = groupsResp.map((group) => group.Name || '');
           this.profileSettings = profileSettings;
+          if (!this.profileSettings.UseProfileLanguage) {
+            this.profileSettings.UseProfileLanguage = true;
+            await this.qerClient.v2Client.portal_profile_post(this.profileSettings);
+          }
           const isUseProfileLangChecked = this.profileSettings.UseProfileLanguage ?? config.PersonConfig?.UseProfileCulture ?? false;
           // Set session culture if isUseProfileLangChecked is true, set browser culture otherwise
           if (isUseProfileLangChecked) {
