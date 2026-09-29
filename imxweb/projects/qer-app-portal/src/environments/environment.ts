@@ -27,14 +27,32 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
+function resolveClientUrl(): string {
+  const href = window.location.href;
+  const idx = href.indexOf('/html/');
+  // Deployed under IIS: https://<host>/ApiServer1/html/qer-app-portal/...
+  // -> https://<host>/ApiServer1
+  if (idx > -1) {
+    return href.substring(0, idx);
+  }
+  // ng serve fallback (no /html/ in the path)
+  return 'http://localhost:8182';
+}
 
 export const environment = {
   production: false,
-  // clientUrl: 'http://localhost:8182',
-  clientUrl: 'https://win-bkaap1tejp6.iamlab.local/ApiServer1/', 
+  clientUrl: resolveClientUrl(),
   appName: 'qer-app-portal',
   appVersion: '1.0.0'
 };
+// export const environment = {
+//   production: false,
+//   clientUrl: 'http://localhost:8182',
+//   // clientUrl: 'https://win-bkaap1tejp6.iamlab.local/ApiServer1/', 
+//   // clientUrl: 'https://localhost/ApiServer1/', 
+//   appName: 'qer-app-portal',
+//   appVersion: '1.0.0'
+// };
 
 
 /*
