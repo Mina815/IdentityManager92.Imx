@@ -1,0 +1,8 @@
+@import '../../../../../shared/scss/common-table.scss';
+
+.imx-contractor-request-card {
+  @include imx-flex-fill-control-hidden-overflow();
+  box-sizing: border-box;
+  overflow-y: auto;
+  padding-bottom: 50px;
+}

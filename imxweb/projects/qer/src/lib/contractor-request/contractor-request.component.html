@@ -1,0 +1,32 @@
+<mat-card class="imx-contractor-request-card">
+  <h1 translate>#LDS#Create Contractor</h1>
+
+  <eui-alert *ngIf="errorMessage" type="error" [colored]="true">
+    {{ errorMessage | translate }}
+  </eui-alert>
+
+  <ng-container *ngIf="isLoading">
+    <div translate>#LDS#Loading...</div>
+  </ng-container>
+
+  <form *ngIf="!isLoading && requestItem" [formGroup]="requestForm">
+    <imx-entity-column-editor
+      *ngFor="let column of parameterColumns; let i = index"
+      [column]="column"
+      (controlCreated)="onControlCreated($event.name + '_' + i, $event.control, column)"
+      [attr.data-imx-identifier]="'contractor-request-' + column.ColumnName + '_' + i"
+    >
+    </imx-entity-column-editor>
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      [disabled]="requestForm.invalid || isSubmitting"
+      (click)="submit()"
+      data-imx-identifier="contractor-request-submit"
+    >
+      {{ '#LDS#Submit request' | translate }}
+    </button>
+  </form>
+</mat-card>

@@ -63,8 +63,15 @@ import { ShoppingCartValidationDetailModule } from '../shopping-cart-validation-
 import { UserModule } from '../user/user.module';
 import { RequestsFeatureGuardService } from '../requests-feature-guard.service';
 import { ItshopPatternModule } from '../itshop-pattern/itshop-pattern.module';
+import { ContractorRequestComponent } from '../contractor-request/contractor-request.component';
 
 const routes: Routes = [
+  {
+    path: 'contractorrequest',
+    component: ContractorRequestComponent,
+    canActivate: [RequestsFeatureGuardService],
+    resolve: [RouteGuardService],
+  },
   {
     path: 'shoppingcart',
     component: ShoppingCartComponent,
@@ -106,7 +113,8 @@ const routes: Routes = [
     CartItemValidationOverviewComponent,
     OrderForAdditionalUsersComponent,
     ShoppingCartSubmitWarningsDialog,
-    ConfirmCartSubmitDialog
+    ConfirmCartSubmitDialog,
+    ContractorRequestComponent
   ],
   imports: [
     LdsReplaceModule,
