@@ -1,16 +1,15 @@
 @import "variables.scss";
 @import '@elemental-ui/core/src/styles/_eui_palette.scss';
 
-$inputWidth: calc(40vw + 2px);
-
 .imx-loginPage {
   display: flex;
   flex-direction: column;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  position: fixed;
+  inset: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-y: auto;
+  box-sizing: border-box;
   //background-color: #7A60A9;
   background-image: url("assets/IAM-SSOO.jpg") !important;
    background-repeat: no-repeat !important;
@@ -21,12 +20,12 @@ $inputWidth: calc(40vw + 2px);
 }
 
 .imx-loginFormcontainer {
-  min-height: 400px;
-  position: absolute;
-  top: 50px;
-  left: 25px;
-  right: 25px;
-  bottom: 25px;
+  position: relative;
+  width: 100%;
+  max-width: 512px;
+  margin: auto;
+  padding: 24px 20px 64px;
+  box-sizing: border-box;
   color: $white;
   display: flex;
   flex-direction: column;
@@ -40,24 +39,28 @@ $inputWidth: calc(40vw + 2px);
 }
 
 .imx-loginMask {
- // padding-top: 30px;
- padding-top: 300px;
+  padding-top: 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .imx-loginInput {
-  margin: auto 12px;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto 12px;
+  box-sizing: border-box;
 
   ::ng-deep {
     input {
-      width: $propertylabelwidth;
-      box-sizing: content-box;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
       margin-bottom: 9px;
       height: 30px;
       padding-left: 6px;
-      width: calc(40vw - 6px);
     }
 
     .mat-form-field-infix {
@@ -84,22 +87,30 @@ $inputWidth: calc(40vw + 2px);
   padding: 30px 0;
   margin: 0 auto;
   width: 100%;
-  display: inline-block;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  box-sizing: border-box;
 
   button {
-    margin: 0 10px;
+    margin: 4px 10px;
   }
 }
 
 .imx-loginData {
-  display: table;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
   margin: 0 auto;
 }
 
 .imx-forgottenPassword {
   text-align: center;
-  width: 512px;
+  width: 100%;
+  max-width: 512px;
   margin: auto;
+  box-sizing: border-box;
 }
 
 .imx-loginFooter {
@@ -118,12 +129,16 @@ $inputWidth: calc(40vw + 2px);
 
 .imx-logoutOAuthInfo {
   text-align: center;
-  width: 512px;
+  width: 100%;
+  max-width: 512px;
   margin: 16px auto auto;
+  box-sizing: border-box;
 }
 
 .imx-loginTextBox {
-  width: 224px;
+  width: 100%;
+  max-width: 224px;
+  box-sizing: border-box;
   color: $VI_Common_Color_Font !important;
 }
 
@@ -155,13 +170,13 @@ a.imx-loginLink:hover {
 }
 
 mat-form-field {
-  width: $inputWidth;
+  width: 100%;
+  max-width: 420px;
 }
 
 // on smaller screens
 @media screen and (max-width : 600px) {
   .imx-loginInput {
-    width: 95%;
     text-align: center;
   }
 
