@@ -112,8 +112,9 @@ export class MastHeadComponent implements OnDestroy {
    * When these {@link EuiTopNavigationItem|items} are set, the menu is displayed.
    */
   @Input() public menuItems: EuiTopNavigationItem[];
-  @Input() public externalLinkUrl = 'https://www.google.com';
-  @Input() public externalLinkLabel = 'Google';
+  @Input() public showExternalLink = true;
+  @Input() public externalLinkUrl = 'https://teams.public.onecdn.static.microsoft/evergreen-assets/safelinks/2/atp-safelinks.html';
+  @Input() public externalLinkLabel = 'Service now';
 
   public get hasDocumentationConfig(): boolean {
     return !!this.appConfig.Config.LocalDocPath;
@@ -164,6 +165,7 @@ export class MastHeadComponent implements OnDestroy {
       if (config.CompanyLogoUrl) {
         // make relative URL absolute if needed
         this.logoUrl = new URL(config.CompanyLogoUrl, this.appConfig.BaseUrl).href;
+        console.log(`Using custom logo from configuration: ${this.logoUrl}`);
       }
       const name = config.ProductName;
       if (name) {

@@ -136,6 +136,21 @@
         </button>
       </ng-template>
     </imx-icon-tile>
+
+    <imx-icon-tile
+      data-imx-identifier="start-tile-service-now"
+      [caption]="'Service now'"
+      [image]="'search'"
+      [identifier]="'service-now-link'"
+    >
+      <ng-template #ActionTemplate>
+        <a mat-button color="primary" href="https://teams.public.onecdn.static.microsoft/evergreen-assets/safelinks/2/atp-safelinks.html" target="_blank" rel="noopener noreferrer"
+          data-imx-identifier="start-button-service-now">
+          <span>Service now</span>
+          <eui-icon size="m" icon="forward"></eui-icon>
+        </a>
+      </ng-template>
+    </imx-icon-tile>
     <imx-ext id="Dashboard-MediumTiles"></imx-ext>
   </div>
   <div class="imx-flexible-tile-row">

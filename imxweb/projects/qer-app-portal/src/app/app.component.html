@@ -1,6 +1,6 @@
 <div class="page">
   <ng-container *ngIf="isLoggedIn">
-    <imx-mast-head [menuItems]="menuItems" [hidden]="isPageHeadless">
+    <imx-mast-head [menuItems]="menuItems" [hidden]="isPageHeadless" [showExternalLink]="false">
       <span imx-profile-menu-items>
         <button mat-menu-item data-imx-identifier="user-menu-profile" (click)="goToProfile()">
           <span translate>#LDS#Menu Entry Profile</span>
