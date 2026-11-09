@@ -1,0 +1,192 @@
+<div class="access-request-page" *ngIf="!isLoading">
+  <mat-card class="access-request-scroll-card">
+    <h1>{{ '#LDS#Application Access Request' | translate }}</h1>
+    <eui-alert *ngIf="errorMessage" type="error" condensed="true" [colored]="true">{{ errorMessage | translate }}</eui-alert>
+    <div class="page-grid">
+      <main>
+      <section class="step-section">
+        <header class="step-heading">
+          <span class="step-number">1</span>
+          <h2>{{ '#LDS#Select Application Account(s)' | translate }}</h2>
+        </header>
+        <div class="account-selection">
+          <mat-card class="selection-card">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ '#LDS#Search account definitions' | translate }}</mat-label>
+              <input matInput [(ngModel)]="accountSearch" [ngModelOptions]="{standalone: true}" />
+              <eui-icon matSuffix icon="search"></eui-icon>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>{{ '#LDS#Select Application Account(s)' | translate }}</mat-label>
+              <mat-select
+                multiple
+                [value]="selectedAccountUids"
+                (selectionChange)="changeSelectedAccounts($event.value)"
+                [disabled]="isSelectingAccounts || isSaving || isCheckingAccountAvailability"
+                [attr.aria-label]="'#LDS#Select Application Account(s)' | translate"
+              >
+                <mat-option
+                  *ngFor="let account of filteredAccounts"
+                  [value]="account.uid"
+                  [disabled]="!account.isSelectable && !isSelected(account)"
+                >
+                  <span class="item-name">{{ account.display }}</span>
+                  <span class="item-description">{{ account.serviceItem.GetEntity().GetColumn('Description')?.GetDisplayValue() }}</span>
+                  <span class="item-description" *ngIf="account.isOwned && selectedReports.size === 0">
+                    {{ '#LDS#This product has already been assigned to {0}.' | translate | ldsReplace: [currentUser.display] }}
+                  </span>
+                  <span class="item-description" *ngIf="account.isOwned && selectedReports.size > 0">
+                    {{ '#LDS#This product has already been assigned to a selected employee.' | translate }}
+                  </span>
+                  <span class="item-description" *ngIf="!account.isOwned && !account.isSelectable">
+                    {{
+                      (selectedReports.size > 0
+                        ? '#LDS#This product cannot currently be requested for the selected employees.'
+                        : '#LDS#This product cannot currently be requested.'
+                      ) | translate
+                    }}
+                  </span>
+                </mat-option>
+                <mat-option disabled *ngIf="filteredAccounts.length === 0">{{ '#LDS#No account definitions found.' | translate }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-card>
+          <mat-card class="selection-card selected-card">
+            <div class="card-header">
+              <h3>{{ '#LDS#Selected Accounts' | translate }} ({{ configurations.length }})</h3>
+              <button mat-button color="primary" type="button" (click)="clearAccounts()" [disabled]="configurations.length === 0">
+                {{ '#LDS#Clear All' | translate }}
+              </button>
+            </div>
+            <div class="chips">
+              <mat-chip-list>
+                <mat-chip *ngFor="let configuration of configurations" [removable]="true" (removed)="toggleAccount(configuration.account, false)">
+                  {{ configuration.account.display }}
+                  <button matChipRemove [attr.aria-label]="('#LDS#Remove' | translate) + ' ' + configuration.account.display">
+                    <eui-icon icon="close"></eui-icon>
+                  </button>
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+            <p class="empty-message" *ngIf="configurations.length === 0">{{ '#LDS#No accounts selected.' | translate }}</p>
+          </mat-card>
+        </div>
+      </section>
+
+      <form [formGroup]="requestForm">
+        <section class="step-section">
+          <header class="step-heading">
+            <span class="step-number">2</span>
+            <h2>{{ '#LDS#Provide Additional Information' | translate }}</h2>
+          </header>
+          <mat-accordion multi>
+            <mat-expansion-panel *ngFor="let configuration of configurations" [expanded]="true">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{ configuration.account.display }} {{ '#LDS#Configuration' | translate }}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="configuration-fields" [formGroup]="configuration.form">
+                <imx-entity-column-editor
+                  *ngFor="let parameter of configuration.preview.parameterCategoryColumns; let i = index"
+                  [column]="parameter.column"
+                  [isMandatory]="isMandatory(parameter.column)"
+                  (controlCreated)="addControl(configuration, $event.name + '_' + i, $event.control)"
+                  (pendingChanged)="configuration.pending = $event"
+                  [attr.data-imx-identifier]="'access-request-parameter-' + parameter.column.ColumnName"
+                ></imx-entity-column-editor>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+          <p class="empty-message" *ngIf="configurations.length === 0">{{ '#LDS#Select an account definition to configure its request.' | translate }}</p>
+          <div class="request-details">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ '#LDS#Reason for Request' | translate }}</mat-label>
+              <textarea matInput formControlName="reason" required rows="3" aria-required="true"></textarea>
+              <mat-error *ngIf="isControlInvalid('reason')">{{ '#LDS#This field is required.' | translate }}</mat-error>
+            </mat-form-field>
+          </div>
+        </section>
+
+        <section class="step-section">
+          <header class="step-heading">
+            <span class="step-number">3</span>
+            <h2>{{ '#LDS#Request Duration' | translate }}</h2>
+          </header>
+          <div class="duration-fields">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ '#LDS#Start Date' | translate }}</mat-label>
+              <input matInput type="date" formControlName="validFrom" required aria-required="true" />
+              <mat-error *ngIf="isControlInvalid('validFrom')">{{ '#LDS#This field is required.' | translate }}</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>{{ '#LDS#End Date' | translate }}</mat-label>
+              <input matInput type="date" formControlName="validUntil" required aria-required="true" />
+              <mat-error *ngIf="isControlInvalid('validUntil')">{{ '#LDS#This field is required.' | translate }}</mat-error>
+            </mat-form-field>
+          </div>
+          <p class="validation-message" *ngIf="requestForm.hasError('invalidDateRange')">
+            {{ '#LDS#The end date must be the same as or later than the start date.' | translate }}
+          </p>
+        </section>
+      </form>
+
+      <div class="page-actions">
+        <button mat-button type="button" (click)="cancel()" [disabled]="isSaving">{{ '#LDS#Cancel' | translate }}</button>
+        <button mat-stroked-button color="primary" type="button" (click)="saveDraft()" [disabled]="!isValid">
+          {{ '#LDS#Save Draft' | translate }}
+        </button>
+        <button mat-raised-button color="primary" type="button" (click)="submitRequest()" [disabled]="!isValid">
+          {{ '#LDS#Submit Request' | translate }}
+        </button>
+      </div>
+      </main>
+
+      <aside>
+        <mat-card class="reports-card">
+        <header class="card-header">
+          <div>
+            <h2>{{ '#LDS#Direct Reports' | translate }}</h2>
+            <span class="reports-count">{{ reports.length }} {{ '#LDS#employees' | translate }}</span>
+          </div>
+        </header>
+        <div class="manager">
+          <span class="avatar">{{ getInitials(currentUser?.display) }}</span>
+          <div><strong>{{ currentUser?.display }}</strong><span>{{ '#LDS#You' | translate }}</span></div>
+        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ '#LDS#Search employees' | translate }}</mat-label>
+          <input matInput [(ngModel)]="employeeSearch" [ngModelOptions]="{standalone: true}" />
+          <eui-icon matSuffix icon="search"></eui-icon>
+        </mat-form-field>
+        <div class="report-list">
+          <mat-checkbox
+            *ngFor="let person of filteredReports"
+            [checked]="selectedReports.has(person.uid)"
+            (change)="toggleReport(person, $event.checked)"
+            [attr.aria-label]="person.display"
+          >
+            <span class="avatar">{{ getInitials(person.display) }}</span>
+            <span class="person-details">
+              <strong>{{ person.display }}</strong>
+              <span>{{ person.department }}<ng-container *ngIf="person.department && person.role"> · </ng-container>{{ person.role }}</span>
+            </span>
+          </mat-checkbox>
+        </div>
+        <div class="paging">
+          <span>{{ '#LDS#Showing {0} of {1}' | translate | ldsReplace: [filteredReports.length, matchingReports.length] }}</span>
+          <button mat-button type="button" (click)="loadMoreReports()" *ngIf="filteredReports.length < matchingReports.length">
+            {{ '#LDS#Load more' | translate }}
+          </button>
+        </div>
+        <mat-checkbox [checked]="allVisibleReportsSelected" (change)="toggleAllReports($event.checked)" [disabled]="filteredReports.length === 0">
+          {{ '#LDS#Select All' | translate }}
+        </mat-checkbox>
+        <eui-alert type="info" condensed="true" [colored]="true">
+          {{ '#LDS#The request will be submitted for the selected employees in one workflow.' | translate }}
+        </eui-alert>
+        </mat-card>
+      </aside>
+    </div>
+  </mat-card>
+</div>
+
+<imx-busy-indicator *ngIf="isLoading"></imx-busy-indicator>

@@ -182,6 +182,7 @@ export { ExclusionCheckComponent } from './lib/shopping-cart-validation-detail/e
 export { ShoppingCartValidationDetailModule } from './lib/shopping-cart-validation-detail/shopping-cart-validation-detail.module';
 export { ShoppingCartValidationDetailService } from './lib/shopping-cart-validation-detail/shopping-cart-validation-detail.service';
 export { ShoppingCartModule } from './lib/shopping-cart/shopping-cart.module';
+export { CustomAccessRequestModule } from './lib/custom-access-request/custom-access-request.module';
 export { SourceDetectiveSidesheetComponent, SourceDetectiveSidesheetData } from './lib/sourcedetective/sourcedetective-sidesheet.component';
 export { SourceDetectiveType } from './lib/sourcedetective/sourcedetective-type.enum';
 export { SourceDetectiveComponent } from './lib/sourcedetective/sourcedetective.component';
@@ -204,4 +205,3 @@ export { ViewDevicesModule } from './lib/view-devices/view-devices.module';
 export { ViewDevicesComponent } from './lib/view-devices/view-devices-home/view-devices.component';
 export { ViewDevicesSidesheetComponent } from './lib/view-devices/view-devices-sidesheet/view-devices-sidesheet.component';
 export { AuthenticationFactors } from './lib/admin/authentication-factors.interface';
-
